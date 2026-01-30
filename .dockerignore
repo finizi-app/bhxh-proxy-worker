@@ -1,0 +1,38 @@
+# Node
+node_modules/
+
+# Build artifacts
+dist/
+
+# Development files
+.wrangler/
+.dev.vars
+*.log
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# Claude skills and config (not needed for deployment)
+.claude/
+.agent/
+
+# Documentation
+*.md
+!README.md
+
+# Test files
+*.test.ts
+*.test.js
+__tests__/
+
+# TypeScript source (we'll compile on the fly or use server.js)
+src/*.ts
+
+# Other
+.DS_Store
+Thumbs.db

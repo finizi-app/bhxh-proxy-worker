@@ -1,0 +1,17 @@
+name: bhxh-forward-proxy
+region: sgp1
+services:
+  - name: proxy
+    image:
+      registry: registry.digitalocean.com/bhxh-proxy
+      registry_path: bhxh-forward-proxy
+      tag: latest
+    health_check:
+      path: /health
+      port: 3000
+    http_port: 3000
+    instance_size_slug: basic-xxs
+    instance_count: 1
+    envs:
+      - key: PORT
+        value: "3000"

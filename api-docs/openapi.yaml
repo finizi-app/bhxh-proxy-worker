@@ -1,0 +1,358 @@
+openapi: 3.0.0
+info:
+  title: BHXH Proxy Worker API
+  version: 1.0.0
+  description: |
+    Proxy API for Vietnam Social Insurance (BHXH) Dich Vu Cong.
+    Provides authenticated access to employee data and lookup tables.
+
+    ## Authentication
+    - Sessions are managed via KV cache (1 hour TTL)
+    - Use `/api/v1/login/captcha` to get captcha
+    - Use `/api/v1/login/token` to exchange captcha for session
+
+    ## Base URL
+    - Production: `https://{worker-subdomain}.workers.dev/api/v1`
+    - Local: `http://localhost:8787/api/v1`
+
+servers:
+  - url: https://{subdomain}.workers.dev/api/v1
+    description: Production Cloudflare Worker
+  - url: http://localhost:8787/api/v1
+    description: Local development
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      description: Returns API status and version
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /employees:
+    get:
+      summary: List employees
+      description: Retrieve paginated list of insured employees
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 100
+            maximum: 500
+          description: Page size
+      responses:
+        '200':
+          description: List of employees
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeListResponse'
+        '401':
+          description: Session expired or invalid
+
+  /session/status:
+    get:
+      summary: Session status
+      description: Check if current session is valid
+      responses:
+        '200':
+          description: Session status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionStatus'
+
+  /session/refresh:
+    post:
+      summary: Refresh session
+      description: Force refresh the authentication session
+      responses:
+        '200':
+          description: Session refreshed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionRefreshResponse'
+
+  /login/captcha:
+    get:
+      summary: Get captcha for manual login
+      description: |
+        Returns captcha image and tokens for manual login flow.
+        Use this when AI captcha solving is not available.
+      responses:
+        '200':
+          description: Captcha data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaptchaResponse'
+
+  /login/token:
+    post:
+      summary: Exchange captcha for auth token
+      description: Complete login by providing solved captcha
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginTokenRequest'
+      responses:
+        '200':
+          description: Login successful, session cached
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Missing required fields
+        '401':
+          description: Invalid captcha or credentials
+
+  /lookup/paper-types:
+    get:
+      summary: Get paper types
+      description: Lookup table code 071
+      responses:
+        '200':
+          description: List of paper types
+  /lookup/countries:
+    get:
+      summary: Get countries
+      description: Lookup table code 072
+      responses:
+        '200':
+          description: List of countries
+  /lookup/ethnicities:
+    get:
+      summary: Get ethnicities
+      description: Lookup table code 073
+      responses:
+        '200':
+          description: List of ethnicities
+  /lookup/labor-plan-types:
+    get:
+      summary: Get labor plan types
+      description: Lookup table code 086
+      responses:
+        '200':
+          description: List of labor plan types
+  /lookup/benefits:
+    get:
+      summary: Get benefits
+      description: Lookup table code 098
+      responses:
+        '200':
+          description: List of benefits
+  /lookup/relationships:
+    get:
+      summary: Get relationships
+      description: Lookup table code 099
+      responses:
+        '200':
+          description: List of relationships
+  /lookup/document-list:
+    get:
+      summary: Get document list
+      description: Lookup table code 028
+      responses:
+        '200':
+          description: List of documents
+
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "ok"
+        service:
+          type: string
+          example: "bhxh-proxy-worker"
+        version:
+          type: string
+          example: "v1"
+        timestamp:
+          type: string
+          format: date-time
+          example: "2026-01-30T17:00:00.000Z"
+
+    Employee:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12345
+        Hoten:
+          type: string
+          example: "Nguyen Van A"
+        Masobhxh:
+          type: string
+          example: "0123456789"
+        chucVu:
+          type: string
+          example: "Nhan Vien"
+        mucLuong:
+          type: number
+          example: 5000000
+        tinhTrang:
+          type: string
+          example: "Dang Lam Viec"
+        Ngaysinh:
+          type: string
+          example: "1990-01-15"
+        Gioitinh:
+          type: integer
+          example: 1
+        soCMND:
+          type: string
+          example: "123456789"
+
+    EmployeeListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Employee'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+              example: 100
+            count:
+              type: integer
+              example: 50
+            unit:
+              type: string
+              example: "Cong Ty ABC"
+
+    SessionStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [active, expired]
+          example: "active"
+        expiresIn:
+          type: integer
+          description: Seconds until expiration
+          example: 3600
+        unit:
+          type: string
+          example: "Cong Ty ABC"
+
+    SessionRefreshResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Session refreshed"
+        unit:
+          type: string
+          example: "Cong Ty ABC"
+        expiresIn:
+          type: integer
+          example: 3600
+
+    CaptchaResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        clientId:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        xClient:
+          type: string
+          description: Encrypted X-CLIENT header value
+        captchaToken:
+          type: string
+          description: Session token for captcha
+        captchaImage:
+          type: string
+          format: base64
+          description: Base64 encoded PNG image
+        message:
+          type: string
+          example: "Solve the captcha and POST to /api/v1/login/token"
+
+    LoginTokenRequest:
+      type: object
+      required:
+        - clientId
+        - xClient
+        - captchaToken
+        - captchaSolution
+      properties:
+        clientId:
+          type: string
+          format: uuid
+        xClient:
+          type: string
+        captchaToken:
+          type: string
+        captchaSolution:
+          type: string
+          description: Captcha text solution
+
+    LoginResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        token:
+          type: string
+          description: Access token for API calls
+        currentUnit:
+          type: object
+          properties:
+            code:
+              type: string
+            name:
+              type: string
+            maCoquan:
+              type: string
+        availableUnits:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              name:
+                type: string
+              maCoquan:
+                type: string
+              maSoBHXH:
+                type: string
+        expiresIn:
+          type: integer
+          example: 3600
+        message:
+          type: string
+          example: "Session cached. You can now call /api/v1/employees"
