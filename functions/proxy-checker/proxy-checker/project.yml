@@ -1,0 +1,7 @@
+targetNamespace: fn-32156d21-8be3-4d6d-b48c-51d166e6ba8d
+parameters: {}
+packages:
+    - name: check
+      actions:
+        - name: hello
+          runtime: nodejs:default
