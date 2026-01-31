@@ -1,20 +1,20 @@
-# BHXH Proxy Worker - Project Roadmap
+# BHXH API - Project Roadmap
 
 ## Overview
 
-This roadmap outlines the development phases, milestones, and progress for the BHXH Proxy Worker project.
+This roadmap outlines the development phases, milestones, and progress for the BHXH API project.
 
 ## Project Phases
 
 ```
-Phase 1: Foundation          Phase 2: Core Features      Phase 3: Enhancement      Phase 4: Production
-[Complete]                  [In Progress]               [Planned]                  [Planned]
+Phase 1: Foundation          Phase 2: Production API      Phase 3: Enhancement      Phase 4: Scale
+[Complete]                  [Complete]                  [In Progress]               [Planned]
         |                          |                          |                          |
         v                          v                          v                          v
 +------------------+    +------------------+    +------------------+    +------------------+
-| Basic Auth Flow  | -> | Employee Data    | -> | Lookup APIs      | -> | Monitoring &     |
-| KV Session Cache |    | Manual Login     |    | Proxy Support    |    | Alerting         |
-| API Endpoints    |    | AI Captcha       |    |                  |    | Rate Limiting    |
+| Express/tsoa     | -> | API Key Auth     | -> | Advanced         | -> | Redis Cache      |
+| Session Service  |    | Per-Request Cred |    | Features         |    | Horizontal Scale |
+| Master Data EPs  |    | Proxy Basic Auth |    | Error Handling   |    | Rate Limiting    |
 +------------------+    +------------------+    +------------------+    +------------------+
 ```
 
@@ -23,124 +23,129 @@ Phase 1: Foundation          Phase 2: Core Features      Phase 3: Enhancement   
 **Status**: Complete
 
 ### Objectives
-- Set up Cloudflare Worker project
+- Set up Express server with tsoa
 - Implement autonomous login flow
-- Configure KV session caching
+- Configure in-memory session caching
 - Create basic API endpoints
 
 ### Deliverables
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Worker scaffolding | Done | `npm create cloudflare@latest` |
-| TypeScript setup | Done | `tsconfig.json`, types |
-| Auth flow implementation | Done | `auth.ts`, `crypto.ts` |
-| KV namespace setup | Done | `BHXH_SESSION` binding |
-| Basic endpoints | Done | `/health`, `/session/status` |
-| Wrangler config | Done | `wrangler.toml` |
+| Express server scaffolding | Done | `src/local-server.ts` |
+| tsoa configuration | Done | `tsoa.json`, decorators |
+| Auth flow implementation | Done | `src/services/session.service.ts` |
+| In-memory session cache | Done | Map-based caching |
+| Basic endpoints | Done | `/`, `/docs`, `/api/v1/*` |
 
 ### Key Files Created
 
 ```
 src/
-├── index.ts      # Entry point
-├── auth.ts       # Authentication
-├── bhxh-client.ts # API client
-└── crypto.ts     # Encryption
+├── local-server.ts          # Express entry point
+├── middleware/
+│   └── api-key.middleware.ts
+├── controllers/
+│   ├── health.controller.ts
+│   ├── employees.controller.ts
+│   ├── session.controller.ts
+│   └── master-data.controller.ts
+├── services/
+│   ├── session.service.ts
+│   ├── bhxh.service.ts
+│   └── proxy.service.ts
+└── models/
+    ├── session.model.ts
+    ├── employee.model.ts
+    └── master-data.model.ts
 ```
 
 ---
 
-## Phase 2: Core Features
+## Phase 2: Production API
 
-**Status**: In Progress
+**Status**: Complete
 
 ### Objectives
-- Employee data retrieval
-- Manual login flow
-- AI CAPTCHA integration
-- Unit selection support
+- API key authentication middleware
+- Per-request BHXH credentials support
+- Named master-data endpoints
+- Proxy authentication
 
 ### Deliverables
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Employee list API | Done | Code 067 |
-| Manual login flow | Done | `/login/captcha`, `/login/token` |
-| AI CAPTCHA solver | Done | Finizi AI Core integration |
-| Multi-unit support | Done | dsDonVi parsing |
-| Session refresh | Done | `/session/refresh` |
-| Proxy support | Done | External proxy routing |
+| API key middleware | Done | X-API-Key header validation |
+| Per-request credentials | Done | username/password query params |
+| Named master-data endpoints | Done | `/api/v1/master-data/*` |
+| Proxy authentication | Done | Basic auth support |
+| Swagger UI | Done | Available at `/docs` |
 
 ### Progress: 100%
 
 ### Current Endpoints
 
 ```
-/employees           - Get employee list
-/login/captcha       - Get captcha for manual login
-/login/token         - Submit captcha solution
-/session/status      - Check session
-/session/refresh     - Force refresh
+GET  /                           # Health check
+GET  /docs                       # Swagger UI
+GET  /swagger.json               # OpenAPI spec
+GET  /api/v1/employees           # Employee list
+GET  /api/v1/session/status      # Session status
+POST /api/v1/session/refresh     # Force refresh
+GET  /api/v1/master-data/paper-types
+GET  /api/v1/master-data/countries
+GET  /api/v1/master-data/ethnicities
+GET  /api/v1/master-data/labor-plan-types
+GET  /api/v1/master-data/benefits
+GET  /api/v1/master-data/relationships
 ```
 
 ---
 
 ## Phase 3: Enhancement
 
-**Status**: Planned
+**Status**: In Progress
 
 ### Objectives
-- Complete lookup API coverage
-- Error handling improvements
-- Documentation
-- Testing framework
-
-### Deliverables
-
-| Item | Priority | Description |
-|------|----------|-------------|
-| Lookup APIs | P1 | All reference data endpoints |
-| Employee CRUD | P2 | Create, update, delete employees |
-| Error handling | P1 | Better error messages |
-| Unit tests | P2 | Test coverage for auth flow |
-| API docs | P1 | Complete API documentation |
-| Logging | P2 | Structured logging |
-
-### Lookup APIs to Implement
-
-| Code | Endpoint | Status |
-|------|----------|--------|
-| 071 | Paper types | Done |
-| 072 | Countries | Done |
-| 073 | Ethnicities | Done |
-| 086 | Labor plan types | Done |
-| 098 | Benefits | Done |
-| 099 | Relationships | Done |
-| 028 | Document list | Done |
-
----
-
-## Phase 4: Production Readiness
-
-**Status**: Planned
-
-### Objectives
-- Monitoring and alerting
-- Rate limiting
-- Security hardening
+- Advanced error handling
+- Structured logging
+- Unit test coverage
 - Performance optimization
 
 ### Deliverables
 
 | Item | Priority | Description |
 |------|----------|-------------|
-| Monitoring | P1 | Cloudflare Analytics |
-| Alerting | P1 | Login failure alerts |
-| Rate limiting | P2 | Prevent abuse |
-| CORS config | P2 | Configurable origins |
+| Error handling | P1 | Consistent error responses |
+| Unit tests | P1 | Test coverage for auth flow |
+| Structured logging | P2 | Request/response logging |
+| API docs | P1 | Complete OpenAPI spec |
+| Health check detail | P2 | Detailed health endpoint |
+
+### Progress: 60%
+
+---
+
+## Phase 4: Scale
+
+**Status**: Planned
+
+### Objectives
+- Redis session cache
+- Horizontal scaling
+- Rate limiting
+- Monitoring & alerting
+
+### Deliverables
+
+| Item | Priority | Description |
+|------|----------|-------------|
+| Redis cache | P1 | Shared session cache |
+| Rate limiting | P1 | Prevent abuse |
+| Monitoring | P2 | Metrics collection |
 | Health checks | P2 | Detailed health endpoint |
-| Metrics | P2 | Response time tracking |
+| Load balancing | P2 | Multi-instance support |
 
 ---
 
@@ -150,26 +155,29 @@ src/
 2025-01
 |
 |-- Phase 1: Foundation (Complete)
-|   |-- Basic auth flow
-|   |-- KV caching
-|   |-- API endpoints
+|   |-- Express server setup
+|   |-- tsoa integration
+|   |-- In-memory session cache
 |
-|-- Phase 2: Core Features (Complete)
-|   |-- Employee data
-|   |-- AI CAPTCHA
-|   |-- Manual login
+|-- Phase 2: Production API (Complete)
+|   |-- API key authentication
+|   |-- Per-request credentials
+|   |-- Named master-data endpoints
+|   |-- Proxy authentication
 |
-2025-02 (Planned)
+2026-01 (Current)
 |
-|-- Phase 3: Enhancement
-|   |-- Complete lookup APIs
+|-- Phase 3: Enhancement (In Progress)
 |   |-- Error handling
-|   |-- Testing
+|   |-- Unit tests
+|   |-- Documentation
 |
-|-- Phase 4: Production
-    |-- Monitoring
+2026-02 (Planned)
+|
+|-- Phase 4: Scale
+    |-- Redis cache
     |-- Rate limiting
-    |-- Security hardening
+    |-- Monitoring
 ```
 
 ---
@@ -181,22 +189,20 @@ src/
 **Sprint**: Phase 3 - Enhancement
 
 **Goals**:
-- [ ] Complete all lookup APIs
+- [x] Update documentation for v2.0.0
 - [ ] Improve error handling
 - [ ] Add unit tests
-- [ ] Update documentation
+- [ ] Complete API documentation
 
 ### Burndown
 
 ```
-Tasks: 10
-Done:  5
+Tasks: 12
+Done:   7
 In Progress: 2
 Remaining: 3
 
-Week 1: [#####     ] 50%
-Week 2: [######### ] 90%
-Week 3: [##########] 100%
+Week 1: [#######   ] 70%
 ```
 
 ---
@@ -210,7 +216,7 @@ Week 3: [##########] 100%
 | Session cache hit rate | > 90% | TBD |
 | CAPTCHA solve success | > 80% | TBD |
 | API response time (P95) | < 5s | TBD |
-| Worker uptime | 99.9% | TBD |
+| Server uptime | 99.9% | TBD |
 
 ### Quality Targets
 
@@ -218,7 +224,7 @@ Week 3: [##########] 100%
 |--------|--------|---------|
 | TypeScript strict mode | 100% | 100% |
 | Error handling coverage | > 95% | TBD |
-| Documentation coverage | 100% | 80% |
+| Documentation coverage | 100% | 90% |
 
 ---
 
@@ -229,7 +235,7 @@ Week 3: [##########] 100%
 | BHXH API changes | High | Medium | Monitor API docs, version pinning |
 | AI service downtime | Medium | Low | Manual login fallback |
 | Proxy instability | Medium | Low | Configurable toggle |
-| KV latency | Low | Low | Cache-first design |
+| Session cache loss | Low | Medium | Auto-login on cache miss |
 
 ---
 
@@ -240,20 +246,40 @@ Week 3: [##########] 100%
 | Dependency | Status | Notes |
 |------------|--------|-------|
 | BHXH Portal | Stable | Monitor for changes |
-| Finizi AI API | Stable | Rate limits apply |
-| Cloudflare Workers | Stable | Platform dependency |
+| AI CAPTCHA API | Stable | Rate limits apply |
+| Proxy Server | Optional | For restricted networks |
 
 ### Internal
 
-| Dependency | Status | Notes |
-|------------|--------|-------|
-| wrangler CLI | Stable | Deployment tool |
-| crypto-js | Stable | Encryption library |
-| Workers Types | Stable | TypeScript definitions |
+| Dependency | Version | Purpose |
+|------------|---------|---------|
+| express | ^4.22.1 | HTTP server |
+| tsoa | ^6.6.0 | OpenAPI integration |
+| axios | ^1.13.4 | HTTP client |
+| crypto-js | ^4.2.0 | Encryption |
 
 ---
 
 ## Changelog
+
+### v2.0.0 (2026-01-31)
+
+**Breaking Changes**:
+- Migrated from Cloudflare Workers to Express/tsoa
+- Removed KV namespace session caching (now in-memory Map)
+- Added X-API-Key header requirement for all endpoints
+
+**Features**:
+- API key authentication middleware
+- Per-request BHXH credentials (username/password query params)
+- Named master-data endpoints (/api/v1/master-data/*)
+- Proxy authentication support (Basic auth)
+- Swagger UI at /docs
+
+**Technical**:
+- Express 4.x server with tsoa 6.x
+- In-memory session cache (Map)
+- Auto-generated routes and OpenAPI spec
 
 ### v1.0.0 (2025-01-30)
 
@@ -261,14 +287,13 @@ Week 3: [##########] 100%
 - Autonomous login with AI CAPTCHA solving
 - Session caching in Cloudflare KV
 - Employee list retrieval (Code 067)
-- Manual login flow for fallback
-- Proxy support for restricted networks
 - All lookup APIs implemented
+- Proxy support for restricted networks
 
 **Technical**:
 - Cloudflare Workers deployment
 - TypeScript with strict mode
-- Modular architecture (4 modules)
+- Modular architecture
 
 ---
 
@@ -278,12 +303,12 @@ Week 3: [##########] 100%
 
 | Priority | Feature | Description |
 |----------|---------|-------------|
-| P1 | Employee details | Code 081 API |
-| P1 | Employee create | Code 066 API |
-| P1 | Employee update | Code 068 API |
-| P2 | Webhook notifications | Session expiry alerts |
-| P2 | Multi-account support | Multiple BHXH accounts |
+| P1 | Redis cache | Shared session cache for scaling |
+| P1 | Rate limiting | Prevent API abuse |
+| P2 | Employee details | Code 081 API |
+| P2 | Employee CRUD | Create, update, delete operations |
 | P3 | GraphQL API | Alternative query interface |
+| P3 | Webhook notifications | Session expiry alerts |
 
 ### Long-term Vision
 
@@ -301,3 +326,4 @@ Week 3: [##########] 100%
 - [System Architecture](./system-architecture.md)
 - [Code Standards](./code-standards.md)
 - [Deployment Guide](./deployment-guide.md)
+- [API Reference](./api-reference.md)

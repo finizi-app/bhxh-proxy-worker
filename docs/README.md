@@ -1,15 +1,17 @@
-# BHXH Proxy Worker
+# BHXH API
 
-A Cloudflare Worker that proxies the Vietnam Social Insurance (BHXH) API with autonomous CAPTCHA solving capabilities.
+Express server with tsoa that proxies the Vietnam Social Insurance (BHXH) API with autonomous CAPTCHA solving capabilities.
 
 ## Overview
 
-This worker provides a simplified interface to the BHXH (Bao Hiem Xa Hoi) portal at `dichvucong.baohiemxahoi.gov.vn`, handling:
+This API provides a simplified interface to the BHXH (Bao Hiem Xa Hoi) portal at `dichvucong.baohiemxahoi.gov.vn`, handling:
 
-- **Session Management**: Automatic login with token caching in Cloudflare KV
-- **CAPTCHA Solving**: AI-powered CAPTCHA recognition via Finizi AI Core API
+- **Session Management**: Automatic login with in-memory session caching
+- **CAPTCHA Solving**: AI-powered CAPTCHA recognition via external AI API
 - **Employee Data**: Retrieve employee records from the BHXH system
-- **Lookup Data**: Access reference data (paper types, countries, ethnicities, etc.)
+- **Master Data**: Access reference data (paper types, countries, ethnicities, etc.)
+- **API Key Authentication**: Secure access via X-API-Key header
+- **Per-Request Credentials**: Multi-tenant support via username/password query parameters
 
 ## Quick Start
 
@@ -17,35 +19,63 @@ This worker provides a simplified interface to the BHXH (Bao Hiem Xa Hoi) portal
 # Install dependencies
 npm install
 
-# Configure secrets (required for production)
-npx wrangler secret put BHXH_USERNAME
-npx wrangler secret put BHXH_PASSWORD
-npx wrangler secret put BHXH_ENCRYPTION_KEY
+# Configure environment
+cp .env.example .dev.vars
+# Edit .dev.vars with your credentials
 
 # Run locally
 npm run dev
 
-# Deploy to Cloudflare
-npm run deploy
+# Access Swagger UI
+open http://localhost:4000/docs
 ```
 
 ## API Endpoints
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/health` | GET | Health check |
-| `/employees` | GET | Fetch employee list |
-| `/session/status` | GET | Check session status |
-| `/session/refresh` | GET | Force session refresh |
-| `/login/captcha` | GET | Get captcha for manual login |
-| `/login/token` | POST | Exchange captcha for token |
-| `/lookup/paper-types` | GET | Lookup paper types (Code 071) |
-| `/lookup/countries` | GET | Lookup countries (Code 072) |
-| `/lookup/ethnicities` | GET | Lookup ethnicities (Code 073) |
-| `/lookup/labor-plan-types` | GET | Lookup labor types (Code 086) |
-| `/lookup/benefits` | GET | Lookup benefits (Code 098) |
-| `/lookup/relationships` | GET | Lookup relationships (Code 099) |
-| `/lookup/document-list` | GET | Lookup documents (Code 028) |
+| Endpoint | Method | Description | Auth Required |
+|----------|--------|-------------|---------------|
+| `/` | GET | Health check | No |
+| `/docs` | GET | Swagger UI | No |
+| `/api/v1/employees` | GET | Fetch employee list | API Key |
+| `/api/v1/session/status` | GET | Check session status | API Key |
+| `/api/v1/session/refresh` | POST | Force session refresh | API Key |
+| `/api/v1/master-data/paper-types` | GET | Paper types (Code 071) | API Key |
+| `/api/v1/master-data/countries` | GET | Countries (Code 072) | API Key |
+| `/api/v1/master-data/ethnicities` | GET | Ethnicities (Code 073) | API Key |
+| `/api/v1/master-data/labor-plan-types` | GET | Labor types (Code 086) | API Key |
+| `/api/v1/master-data/benefits` | GET | Benefits (Code 098) | API Key |
+| `/api/v1/master-data/relationships` | GET | Relationships (Code 099) | API Key |
+
+## Authentication
+
+### API Key Authentication
+
+All protected endpoints require an `X-API-Key` header:
+
+```bash
+curl -H "X-API-Key: your-api-key" http://localhost:4000/api/v1/employees
+```
+
+Public endpoints (no API key required):
+- `/` - Health check
+- `/docs` - Swagger UI
+- `/swagger.json` - OpenAPI spec
+
+### Per-Request BHXH Credentials
+
+Optional `username` and `password` query parameters for multi-tenant support:
+
+```bash
+# With specific credentials
+curl -H "X-API-Key: your-api-key" \
+  "http://localhost:4000/api/v1/employees?username=user@example.com&password=pass123"
+
+# Without credentials (uses fallback from .dev.vars)
+curl -H "X-API-Key: your-api-key" \
+  "http://localhost:4000/api/v1/employees"
+```
+
+Sessions are cached per unique credentials combination.
 
 ## Architecture
 
@@ -53,11 +83,13 @@ npm run deploy
 Client Request
        |
        v
-Cloudflare Worker
+Express Server (local-server.ts)
        |
-   [Route Matching]
+   [API Key Middleware] --> 401/403 if invalid
        |
-   [Session Check] ---> KV Namespace
+   [tsoa Routes] --> Controller Methods
+       |
+   [Session Check] ---> In-Memory Map
        |
        v
 [Valid Session] ---> [Expired/Missing]
@@ -75,7 +107,7 @@ Cloudflare Worker
                        [Login + Token]
                              |
                              v
-                       [Cache to KV]
+                       [Cache to Map]
                              |
                              v
                        [Fetch Data]
@@ -84,41 +116,79 @@ Cloudflare Worker
 ## Project Structure
 
 ```
-bhxh-proxy-worker/
+bhxh-api/
 ├── src/
-│   ├── index.ts         # Main entry point, route handlers
-│   ├── auth.ts          # Authentication & session management
-│   ├── bhxh-client.ts   # BHXH API client
-│   └── crypto.ts        # AES encryption utilities
-├── api-docs/            # BHXH API documentation
-├── wrangler.toml       # Cloudflare Worker configuration
-├── package.json         # Dependencies
-└── tsconfig.json        # TypeScript configuration
+│   ├── local-server.ts       # Express server entry point
+│   ├── controllers/          # tsoa REST controllers
+│   │   ├── health.controller.ts
+│   │   ├── employees.controller.ts
+│   │   ├── session.controller.ts
+│   │   └── master-data.controller.ts
+│   ├── services/             # Business logic layer
+│   │   ├── session.service.ts
+│   │   ├── bhxh.service.ts
+│   │   └── proxy.service.ts
+│   ├── models/               # TypeScript interfaces
+│   │   ├── session.model.ts
+│   │   ├── employee.model.ts
+│   │   └── master-data.model.ts
+│   ├── middleware/           # Express middleware
+│   │   └── api-key.middleware.ts
+│   ├── generated/            # tsoa auto-generated
+│   │   ├── routes.ts
+│   │   └── swagger.json
+│   ├── crypto.ts             # AES encryption utilities
+│   ├── bhxh-types.ts         # BHXH API types
+│   └── bhxh-http-utils.ts    # HTTP utilities
+├── api-docs/                 # BHXH API documentation
+├── docs/                     # Project documentation
+├── .dev.vars                 # Environment variables (local)
+├── package.json              # Dependencies
+├── tsconfig.json             # TypeScript config
+└── tsoa.json                 # tsoa configuration
 ```
 
 ## Configuration
 
-### Environment Variables (Secrets)
+### Environment Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `BHXH_USERNAME` | BHXH portal username | Yes |
-| `BHXH_PASSWORD` | BHXH portal password | Yes |
-| `BHXH_ENCRYPTION_KEY` | AES encryption key | Yes |
-| `AI_CAPTCHA_ENDPOINT` | Finizi AI Core API endpoint | Yes |
-| `AI_CAPTCHA_API_KEY` | AI API authentication token | No |
-| `EXTERNAL_PROXY_URL` | Proxy server URL | No |
-| `USE_PROXY` | Enable proxy (`true`/`false`) | No |
+| Variable | Description | Required | Default |
+|----------|-------------|----------|---------|
+| `API_KEYS` | Comma-separated API keys | Yes | - |
+| `BHXH_USERNAME` | BHXH portal username (fallback) | No | - |
+| `BHXH_PASSWORD` | BHXH portal password (fallback) | No | - |
+| `BHXH_ENCRYPTION_KEY` | AES encryption key | No | `S6\|d'qc1GG,'rx&xn0XC` |
+| `AI_CAPTCHA_ENDPOINT` | AI CAPTCHA solver endpoint | No | - |
+| `AI_CAPTCHA_API_KEY` | AI API authentication token | No | - |
+| `BHXH_BASE_URL` | BHXH portal base URL | No | `https://dichvucong.baohiemxahoi.gov.vn` |
+| `USE_PROXY` | Enable proxy (`true`/`false`) | No | `false` |
+| `EXTERNAL_PROXY_URL` | Proxy server URL | No | - |
+| `EXTERNAL_PROXY_USERNAME` | Proxy authentication username | No | - |
+| `EXTERNAL_PROXY_PASSWORD` | Proxy authentication password | No | - |
+| `HOST` | Server host | No | `0.0.0.0` |
+| `PORT` | Server port | No | `4000` |
 
-### KV Namespace
+### Generate API Keys
 
-The worker uses `BHXH_SESSION` KV namespace for session caching. Pre-configured in `wrangler.toml`:
+```bash
+# Generate secure API key (32 bytes hex)
+openssl rand -hex 32
+```
 
-```toml
-[[kv_namespaces]]
-binding = "BHXH_SESSION"
-id = "2c3dacd3163f4dda97eac85c82324f0d"
-preview_id = "ff7eea72287f4f8eb7c640d4c4818072"
+## Development
+
+```bash
+# Start development server
+npm run dev
+
+# Generate Swagger spec
+npm run swagger
+
+# Generate tsoa routes
+npm run routes
+
+# Run tests
+npm test
 ```
 
 ## Documentation
@@ -129,16 +199,20 @@ preview_id = "ff7eea72287f4f8eb7c640d4c4818072"
 - [System Architecture](./system-architecture.md)
 - [Project Roadmap](./project-roadmap.md)
 - [Deployment Guide](./deployment-guide.md)
+- [API Reference](./api-reference.md)
+- [API Migration Guide](./api-migration-guide.md)
 
 ## Dependencies
 
 | Package | Version | Purpose |
 |---------|---------|---------|
-| `crypto-js` | ^4.2.0 | AES encryption |
+| `express` | ^4.22.1 | HTTP server |
+| `tsoa` | ^6.6.0 | OpenAPI/Swagger integration |
+| `swagger-ui-express` | ^5.0.1 | Swagger UI |
 | `axios` | ^1.13.4 | HTTP client |
-| `undici` | ^7.19.2 | Fetch API polyfill |
-| `@cloudflare/workers-types` | ^4.20250129.0 | TypeScript types |
-| `wrangler` | ^4.0.0 | Cloudflare CLI |
+| `crypto-js` | ^4.2.0 | AES encryption |
+| `https-proxy-agent` | ^7.0.6 | Proxy support |
+| `dotenv` | ^17.2.3 | Environment configuration |
 
 ## License
 

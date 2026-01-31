@@ -5,10 +5,25 @@
   "spec": {
     "outputDirectory": "./src/generated",
     "specFileBaseName": "swagger",
-    "version": 3
+    "version": 3,
+    "securityDefinitions": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "X-API-Key",
+        "description": "API key for authentication",
+        "in": "header"
+      }
+    }
   },
   "routes": {
     "routesDir": "./src/generated",
     "routesFileName": "routes.ts"
+  },
+  "specMappers": {
+    "RequestMapping": {
+      "paths": {
+        "$ref": "#/definitions/RequestMapping"
+      }
+    }
   }
 }
