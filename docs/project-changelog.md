@@ -6,7 +6,35 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-#### Authentication & Security
+#### Code 600 Declaration API (Codes 084, 117)
+- **Code 600 Declaration Endpoints** (2026-01-31)
+  - `POST /api/v1/employees/details` - Fetch full employee details by IDs (Code 117)
+  - `POST /api/v1/declarations/submit` - Submit declaration forms (Code 084)
+  - Supports D02-TS (employee registration/adjustment), TK1-TS (summary), D01-TS (termination) forms
+  - 14 method codes: TM, DC, TT, AD, GH, KL, OF, TS, NC, TBHYT, TBHTN, TNLD, BNN
+  - Automatic `tienLuong` number-to-string conversion for BHXH API compatibility
+
+#### Models
+- `src/models/d02-ts-nguoi-lao-dong.model.ts` - Complete D02-TS employee structure (40+ fields)
+- `src/models/code-600.model.ts` - Code 600 request/response types with actual API structure
+- Extended `src/models/index.ts` - Added Code 600 and D02-TS type exports
+
+#### Services
+- Extended `src/services/bhxh.service.ts` - Added `fetchFullEmployeeDetails`, `submitCode600Form`, `normalizeD02Employee`
+
+#### Controllers
+- `src/controllers/declarations.controller.ts` - Declaration submission endpoint
+- Extended `src/controllers/employees.controller.ts` - Added `POST /details` for Code 117
+
+#### Documentation
+- API documentation for Code 600 declaration submission (Code 084)
+- API documentation for full employee details (Code 117)
+
+### Changed
+- `tienLuong` field in D02-TS employee data is now `string` type (was `number`)
+- BHXH API Code 084 payload structure updated to match actual format
+
+### Authentication & Security
 - **Header-Based Authentication** (2026-01-31)
   - `X-Username` header - BHXH username for authentication (overrides query params)
   - `X-Password` header - BHXH password for authentication (overrides query params)

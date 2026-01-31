@@ -15,6 +15,8 @@ import { GeographicController } from './../controllers/geographic.controller';
 import { EmployeesController } from './../controllers/employees.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { DepartmentController } from './../controllers/department.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { DeclarationsController } from './../controllers/declarations.controller';
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
 
 
@@ -247,27 +249,6 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "EmployeeBulkUploadResponse": {
-        "dataType": "refObject",
-        "properties": {
-            "success": {"dataType":"boolean","required":true},
-            "message": {"dataType":"string","required":true},
-            "processed": {"dataType":"double"},
-            "errors": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"message":{"dataType":"string","required":true},"row":{"dataType":"double","required":true}}}},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "EmployeeUpdateResponse": {
-        "dataType": "refObject",
-        "properties": {
-            "success": {"dataType":"boolean","required":true},
-            "message": {"dataType":"string","required":true},
-            "data": {"ref":"Employee"},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "EmployeeFamilyMember": {
         "dataType": "refObject",
         "properties": {
@@ -294,6 +275,58 @@ const models: TsoaRoute.Models = {
             "quocTich": {"dataType":"string"},
             "danToc": {"dataType":"string"},
             "diaChi_ks": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "FullEmployeeDetails": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "Hoten": {"dataType":"string"},
+            "Masobhxh": {"dataType":"string"},
+            "soHopDong": {"dataType":"string"},
+            "loaiHopDong": {"dataType":"string"},
+            "ngayHieuLuc": {"dataType":"string"},
+            "ngayKy": {"dataType":"string"},
+            "heSoLuong": {"dataType":"double"},
+            "mucLuong": {"dataType":"string"},
+            "phuCapCV": {"dataType":"string"},
+            "phuCapTNNghe": {"dataType":"string"},
+            "phuCapTNVK": {"dataType":"string"},
+            "listThanhVien": {"dataType":"array","array":{"dataType":"refObject","ref":"EmployeeFamilyMember"}},
+            "lichSu": {"dataType":"array","array":{"dataType":"any"}},
+        },
+        "additionalProperties": {"dataType":"any"},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "FullEmployeeDetailsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "data": {"dataType":"array","array":{"dataType":"refObject","ref":"FullEmployeeDetails"}},
+            "message": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "EmployeeBulkUploadResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+            "processed": {"dataType":"double"},
+            "errors": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"message":{"dataType":"string","required":true},"row":{"dataType":"double","required":true}}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "EmployeeUpdateResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+            "data": {"ref":"Employee"},
         },
         "additionalProperties": false,
     },
@@ -468,6 +501,233 @@ const models: TsoaRoute.Models = {
             "ma": {"dataType":"string","required":true},
             "ten": {"dataType":"string","required":true},
             "ghiChu": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Code600SubmitResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+            "thuTucId": {"dataType":"double"},
+            "data": {"dataType":"any"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Code600ThuTuc": {
+        "dataType": "refObject",
+        "properties": {
+            "thuTucId": {"dataType":"double"},
+            "Trangthai": {"dataType":"double"},
+            "maThuTuc": {"dataType":"enum","enums":["600"],"required":true},
+            "kyKeKhai": {"dataType":"string","required":true},
+            "dot": {"dataType":"string"},
+            "maCoQuan": {"dataType":"string","required":true},
+            "maDonVi": {"dataType":"string"},
+            "tenThuTuc": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Code600ToKhai": {
+        "dataType": "refObject",
+        "properties": {
+            "maToKhai": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["D02-TS"]},{"dataType":"enum","enums":["TK1-TS"]},{"dataType":"enum","enums":["D01-TS"]}],"required":true},
+            "tenToKhai": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "D02MethodCode": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["TM"]},{"dataType":"enum","enums":["DC"]},{"dataType":"enum","enums":["TT"]},{"dataType":"enum","enums":["AD"]},{"dataType":"enum","enums":["GH"]},{"dataType":"enum","enums":["KL"]},{"dataType":"enum","enums":["OF"]},{"dataType":"enum","enums":["TS"]},{"dataType":"enum","enums":["NC"]},{"dataType":"enum","enums":["TBHYT"]},{"dataType":"enum","enums":["TBHTN"]},{"dataType":"enum","enums":["TNLD"]},{"dataType":"enum","enums":["BNN"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "D02StatusCode": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["01"]},{"dataType":"enum","enums":["02"]},{"dataType":"enum","enums":["03"]},{"dataType":"enum","enums":["04"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "D02TSNguoiLaoDong": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double"},
+            "Nldid": {"dataType":"double"},
+            "Manld": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "pa": {"ref":"D02MethodCode","required":true},
+            "Tinhtrang": {"ref":"D02StatusCode","required":true},
+            "Hoten": {"dataType":"string","required":true},
+            "Masobhxh": {"dataType":"string","required":true},
+            "chucVu": {"dataType":"string","required":true},
+            "tienLuong": {"dataType":"string","required":true},
+            "phuCapCV": {"dataType":"string","required":true},
+            "phuCapTNVK": {"dataType":"string","required":true},
+            "phuCapTNNghe": {"dataType":"string","required":true},
+            "phuCapLuong": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "phuCapBoSung": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "tyLeDong": {"dataType":"string","required":true},
+            "tuThang": {"dataType":"string","required":true},
+            "denThang": {"dataType":"string","required":true},
+            "tinhLai": {"dataType":"double","required":true},
+            "daCoSo": {"dataType":"double","required":true},
+            "mucHuong": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "Maphongban": {"dataType":"string","required":true},
+            "maVungSS": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "maVungLTT": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "stt": {"dataType":"double"},
+            "loai": {"dataType":"double"},
+            "ghiChu": {"dataType":"string"},
+            "Refid": {"dataType":"double"},
+            "thuTucId": {"dataType":"double"},
+            "soToBiaSoBhxh": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "soToRoiSoBhxh": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "soTheBHYT": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "Gioitinh": {"dataType":"string","required":true},
+            "Cogiamchet": {"dataType":"double"},
+            "Ngaychet": {"dataType":"string"},
+            "noiLamViec": {"dataType":"string"},
+            "VtvlKhacTungay": {"dataType":"string"},
+            "VtvlKhacDenngay": {"dataType":"string"},
+            "VtvlNqlTungay": {"dataType":"string"},
+            "VtvlNqlDenngay": {"dataType":"string"},
+            "VtvlCmktbcTungay": {"dataType":"string"},
+            "VtvlCmktbcDenngay": {"dataType":"string"},
+            "VtvlCmktbtTungay": {"dataType":"string"},
+            "VtvlCmktbtDenngay": {"dataType":"string"},
+            "NndhTungay": {"dataType":"string"},
+            "NndhDenngay": {"dataType":"string"},
+            "HdldTungay": {"dataType":"string"},
+            "HdldXdthTungay": {"dataType":"string"},
+            "HdldXdthDenngay": {"dataType":"string"},
+            "HdldKhacTungay": {"dataType":"string"},
+            "HdldKhacDenngay": {"dataType":"string"},
+            "Ngaysinh": {"dataType":"string"},
+            "Cmnd": {"dataType":"string"},
+            "Tenphuongan": {"dataType":"string"},
+            "Tenphongban": {"dataType":"string"},
+            "Tenloai": {"dataType":"string"},
+            "Tenvungltt": {"dataType":"string"},
+            "editable": {"dataType":"boolean"},
+            "Stt": {"dataType":"double"},
+            "maNLD": {"dataType":"string"},
+            "tinhTrang": {"dataType":"string"},
+            "VtvlActive": {"dataType":"double"},
+            "HdldActive": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Code600D02FormSection": {
+        "dataType": "refObject",
+        "properties": {
+            "nguoiLaoDong": {"dataType":"array","array":{"dataType":"refObject","ref":"D02TSNguoiLaoDong"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Code600FormSection": {
+        "dataType": "refObject",
+        "properties": {
+            "nguoiLaoDong": {"dataType":"array","array":{"dataType":"any"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Record_string.unknown_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"any"},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Code600TK1Employee": {
+        "dataType": "refObject",
+        "properties": {
+            "Stt": {"dataType":"double"},
+            "nhan_Bangiay": {"dataType":"double"},
+            "nhan_BanDientu": {"dataType":"double"},
+            "Hoten": {"dataType":"string","required":true},
+            "Ngaysinh": {"dataType":"string"},
+            "Gioitinh": {"dataType":"string"},
+            "Tengioitinh": {"dataType":"string"},
+            "quocTich": {"dataType":"string"},
+            "Tenquoctich": {"dataType":"string"},
+            "danToc": {"dataType":"string"},
+            "Tendantoc": {"dataType":"string"},
+            "Diachiks": {"dataType":"string"},
+            "maXa_KS": {"dataType":"string"},
+            "maTinh_KS": {"dataType":"string"},
+            "diaChi_NN": {"dataType":"string"},
+            "Diachinnhs": {"dataType":"string"},
+            "maXa_NN": {"dataType":"string"},
+            "maHuyen_NN": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "maTinh_NN": {"dataType":"string"},
+            "Masobhxh": {"dataType":"string"},
+            "dienThoai_LH": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "cmnd": {"dataType":"string"},
+            "ThTreEmDuoi6": {"dataType":"boolean"},
+            "ten_ChaMe_GiamHo": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "maHo_GiaDinh": {"dataType":"string"},
+            "Muctien": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "Phuongthuc": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "Noidkkcb": {"dataType":"string"},
+            "Matinhbenhvien": {"dataType":"string"},
+            "Tentinhbenhvien": {"dataType":"string"},
+            "Mabenhvien": {"dataType":"string"},
+            "noiDung_ThayDoi": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "hoSoKemTheo": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "dangKyNhanTai": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "Ccns": {"dataType":"string"},
+            "Nldid": {"dataType":"double"},
+            "id": {"dataType":"double"},
+            "thongTinHoGiaDinh": {"ref":"Record_string.unknown_"},
+            "Refid": {"dataType":"double"},
+            "email_LH": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "diaChi_ks2": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "nhan_Bangiay_chk": {"dataType":"boolean"},
+            "nhan_BanDientu_chk": {"dataType":"boolean"},
+            "Tinh_NhanBangiay": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "Huyen_NhanBangiay": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "Xa_NhanBangiay": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "DiaChiNhanBangiay": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "editable": {"dataType":"boolean"},
+        },
+        "additionalProperties": {"dataType":"any"},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Code600TK1FormSection": {
+        "dataType": "refObject",
+        "properties": {
+            "nguoiLaoDong": {"dataType":"array","array":{"dataType":"refObject","ref":"Code600TK1Employee"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Code600D01FormSection": {
+        "dataType": "refObject",
+        "properties": {
+            "nguoiLaoDong": {"dataType":"array","array":{"dataType":"any"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Code600SubmitRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "thuTucId": {"dataType":"double"},
+            "nguoiLaoDong": {"dataType":"enum","enums":[null]},
+            "thuTuc": {"ref":"Code600ThuTuc","required":true},
+            "listToKhai": {"dataType":"array","array":{"dataType":"refObject","ref":"Code600ToKhai"}},
+            "refIdForm": {"dataType":"array","array":{"dataType":"any"}},
+            "scanFile": {"dataType":"nestedObjectLiteral","nestedProperties":{"otherFile":{"dataType":"array","array":{"dataType":"any"},"required":true},"listFile":{"dataType":"array","array":{"dataType":"any"},"required":true}}},
+            "D02-TS": {"dataType":"union","subSchemas":[{"ref":"Code600D02FormSection"},{"ref":"Code600FormSection"}]},
+            "TK1-TS": {"dataType":"union","subSchemas":[{"ref":"Code600TK1FormSection"},{"ref":"Code600FormSection"}]},
+            "D01-TS": {"dataType":"union","subSchemas":[{"ref":"Code600D01FormSection"},{"ref":"Code600FormSection"}]},
+            "masobhxhuser": {"dataType":"string"},
+            "macoquanuser": {"dataType":"string"},
+            "loaidoituonguser": {"dataType":"string"},
+            "username": {"dataType":"string"},
+            "password": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -858,6 +1118,37 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsEmployeesController_getFullEmployeeDetails: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                requestBody: {"in":"body","name":"requestBody","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"listNldid":{"dataType":"array","array":{"dataType":"double"},"required":true}}},
+        };
+        app.post('/api/v1/employees/details',
+            ...(fetchMiddlewares<RequestHandler>(EmployeesController)),
+            ...(fetchMiddlewares<RequestHandler>(EmployeesController.prototype.getFullEmployeeDetails)),
+
+            async function EmployeesController_getFullEmployeeDetails(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsEmployeesController_getFullEmployeeDetails, request, response });
+
+                const controller = new EmployeesController();
+
+              await templateService.apiHandler({
+                methodName: 'getFullEmployeeDetails',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsEmployeesController_uploadEmployees: Record<string, TsoaRoute.ParameterSchema> = {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
@@ -1101,6 +1392,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'deleteDepartment',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsDeclarationsController_submitDeclaration: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                submitRequest: {"in":"body","name":"submitRequest","required":true,"ref":"Code600SubmitRequest"},
+        };
+        app.post('/api/v1/declarations/submit',
+            ...(fetchMiddlewares<RequestHandler>(DeclarationsController)),
+            ...(fetchMiddlewares<RequestHandler>(DeclarationsController.prototype.submitDeclaration)),
+
+            async function DeclarationsController_submitDeclaration(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsDeclarationsController_submitDeclaration, request, response });
+
+                const controller = new DeclarationsController();
+
+              await templateService.apiHandler({
+                methodName: 'submitDeclaration',
                 controller,
                 response,
                 next,
