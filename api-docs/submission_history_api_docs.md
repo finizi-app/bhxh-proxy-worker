@@ -9,6 +9,7 @@ This document details the APIs related to querying previously submitted document
 *   **Get Processing Status**: Code **019**
 *   **Clone/Copy Submission**: Code **092**
 *   **Get Procedure Workflow**: Code **062**
+*   **Get Declaration Detail**: Code **090**
 
 ---
 
@@ -54,3 +55,12 @@ Retrieves the list of required forms/templates (`matokhai`) that make up the dos
 
 *   **Purpose**: Getting the "Bill of Materials" for the submission (Required documents).
 *   **Detailed Documentation**: [code-062.md](code-062.md)
+
+---
+
+## 6. Get Declaration Detail (Code 090)
+
+Retrieves the detailed content of a specific declaration submission (Hồ sơ), including member lists (`D02-TS`), application forms (`TK1-TS`).
+
+*   **Purpose**: "Chi tiết hồ sơ" / Viewing the data submitted.
+*   **Detailed Documentation**: [code-090.md](code-090.md)

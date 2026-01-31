@@ -30,6 +30,12 @@ This document catalogs the API endpoints discovered during reverse engineering. 
 *   **[Code 117](code-117.md)** - Fetch Full Employee Details
   - Used when selecting employees for forms
   - Returns comprehensive employee data
+*   **View [submission_history_api_docs.md](submission_history_api_docs.md) for:**
+  - **[Code 085](code-085.md)** - Submission History
+  - **[Code 090](code-090.md)** - Declaration Detail
+  - **[Code 062](code-062.md)** - Required Forms/Templates
+  - **[Code 019](code-019.md)** - Processing Status
+  - **[Code 092](code-092.md)** - Next Batch Number
 
 ---
 
