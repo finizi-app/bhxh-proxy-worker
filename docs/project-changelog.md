@@ -1,50 +1,121 @@
 # Project Changelog
 
+All notable changes to this project will be documented in this file.
+
 ## [Unreleased]
 
 ### Added
 
+#### Authentication & Security
+- **Header-Based Authentication** (2026-01-31)
+  - `X-Username` header - BHXH username for authentication (overrides query params)
+  - `X-Password` header - BHXH password for authentication (overrides query params)
+  - Headers take priority over query parameters for backward compatibility
+  - Updated `AuthenticatedRequest` interface in middleware for type safety
+  - All controllers updated to use `@Request()` decorator
+  - Swagger documentation updated with header parameters
+
+#### Department Management
 - **Department CRUD Operations** (Codes 077, 079, 080)
   - `GET /api/v1/departments` - List departments with pagination and filters
   - `GET /api/v1/departments/{id}` - Get department by ID
   - `POST /api/v1/departments` - Create new department
   - `PUT /api/v1/departments/{id}` - Update department
   - `DELETE /api/v1/departments/{id}` - Delete department
+  - Added `madonvi` and `macoquan` fields for BHXH API compatibility
 
+#### Employee Management
 - **Employee CRUD Extensions** (Codes 068, 112, 156, 172)
   - `GET /api/v1/employees/{employeeId}` - Get employee by ID using Code 172
   - `GET /api/v1/employees/{employeeId}/sync` - Sync employee with central BHXH (Code 156)
   - `PUT /api/v1/employees/{employeeId}` - Update employee (Code 068)
-  - `POST /api/v1/employees/upload` - Bulk upload employees from Excel file
+  - `POST /api/v1/employees/upload` - Bulk upload employees from Excel file (Code 112)
 
-- **Geographic Data** (Code 063)
+#### Geographic Data
+- **Geographic Data Endpoints** (Code 063)
   - `GET /api/v1/geographic/districts` - Get districts by province code
 
-- **New Models**
-  - `src/models/department.model.ts` - Department CRUD type definitions
-  - `src/models/geographic.model.ts` - Geographic data types (District, Province, Ward)
-  - Extended `src/models/employee.model.ts` - Added detail, update, sync, and bulk upload types
+#### Master Data
+- **Named Master Data Endpoints** (replaces generic `/lookup/{code}`)
+  - `GET /api/v1/master-data/paper-types` (Code 071) - Document types
+  - `GET /api/v1/master-data/countries` (Code 072) - ISO country codes
+  - `GET /api/v1/master-data/ethnicities` (Code 073) - Vietnamese ethnic groups
+  - `GET /api/v1/master-data/labor-plan-types` (Code 086) - Employment change categories
+  - `GET /api/v1/master-data/benefits` (Code 098) - Social insurance benefit types
+  - `GET /api/v1/master-data/relationships` (Code 099) - Family/household relationships
 
-- **New Services**
-  - `src/services/department.service.ts` - Department CRUD operations
-  - `src/services/geographic.service.ts` - Geographic data lookup
-  - Extended `src/services/bhxh.service.ts` - Added `updateEmployee`, `syncEmployee`, `getEmployeeDetail` functions
+#### Models
+- `src/models/department.model.ts` - Department CRUD type definitions
+- `src/models/geographic.model.ts` - Geographic data types (District, Province, Ward)
+- Extended `src/models/employee.model.ts` - Added detail, update, sync, and bulk upload types
 
-- **New Controllers**
-  - `src/controllers/department.controller.ts` - Department REST endpoints
-  - `src/controllers/geographic.controller.ts` - Geographic data REST endpoints
-  - Extended `src/controllers/employees.controller.ts` - Added PUT update, GET sync, improved GET detail
+#### Services
+- `src/services/department.service.ts` - Department CRUD operations
+- `src/services/geographic.service.ts` - Geographic data lookup
+- Extended `src/services/bhxh.service.ts` - Added `updateEmployee`, `syncEmployee`, `getEmployeeDetail` functions
 
-- **Model Index**
-  - `src/models/index.ts` - Centralized model exports
+#### Controllers
+- `src/controllers/department.controller.ts` - Department REST endpoints
+- `src/controllers/geographic.controller.ts` - Geographic data REST endpoints
+- `src/controllers/master-data.controller.ts` - Named master data endpoints
+- Extended `src/controllers/employees.controller.ts` - Added PUT update, GET sync, improved GET detail
+
+#### Documentation
+- API documentation for Edit Employee flow (Code 068)
+- API documentation for geographic data endpoints (Code 063)
+- API documentation for employee sync (Code 156)
+- API documentation for employee detail (Code 172)
+
+### Changed
+- Query parameters for username/password now deprecated (headers preferred)
+- Swagger UI updated with security definitions for API key authentication
+
+### Fixed
+- Department API calls missing `madonvi` and `macoquan` lowercase fields for BHXH API compatibility
 
 ### Known Limitations
-
 - Employee detail endpoint (Code 172) requires internal record ID from employee list
 - No individual employee create/delete operations (BHXH API limitation)
 - Employee update (Code 068) requires full employee data structure - retrieve with GET first
 - Bulk upload requires Excel file (.xls or .xlsx) via multipart/form-data
 - Employee sync (Code 156) requires valid Social Security Number and agency code
+
+---
+
+## v2.1.0 (2026-01-31)
+
+### Summary
+Major feature release adding Department CRUD, Employee management extensions, and geographic data endpoints.
+
+### Authentication & Security
+- Header-based authentication (`X-Username`, `X-Password`) with backward compatibility for query parameters
+- API key authentication via `X-API-Key` header for all protected endpoints
+
+### API Endpoints Added
+
+#### Department Management
+- `POST /api/v1/departments` - Create department (Code 077)
+- `GET /api/v1/departments` - List departments with pagination (Code 079)
+- `GET /api/v1/departments/{id}` - Get department by ID
+- `PUT /api/v1/departments/{id}` - Update department (Code 077)
+- `DELETE /api/v1/departments/{id}` - Delete department (Code 080)
+
+#### Employee Management
+- `GET /api/v1/employees/{employeeId}` - Get employee by ID (Code 172)
+- `PUT /api/v1/employees/{employeeId}` - Update employee (Code 068)
+- `GET /api/v1/employees/{employeeId}/sync` - Sync with central BHXH (Code 156)
+- `POST /api/v1/employees/upload` - Bulk upload from Excel (Code 112)
+
+#### Geographic Data
+- `GET /api/v1/geographic/districts` - Get districts by province (Code 063)
+
+#### Master Data (replaces generic lookup)
+- `GET /api/v1/master-data/paper-types` (Code 071)
+- `GET /api/v1/master-data/countries` (Code 072)
+- `GET /api/v1/master-data/ethnicities` (Code 073)
+- `GET /api/v1/master-data/labor-plan-types` (Code 086)
+- `GET /api/v1/master-data/benefits` (Code 098)
+- `GET /api/v1/master-data/relationships` (Code 099)
 
 ---
 
@@ -68,13 +139,7 @@
 
 - **API Endpoints**
   - Added `/api/v1` prefix to all endpoints
-  - Replaced generic `/lookup/{code}` with named master-data endpoints:
-    - `/api/v1/master-data/paper-types`
-    - `/api/v1/master-data/countries`
-    - `/api/v1/master-data/ethnicities`
-    - `/api/v1/master-data/labor-plan-types`
-    - `/api/v1/master-data/benefits`
-    - `/api/v1/master-data/relationships`
+  - Replaced generic `/lookup/{code}` with named master-data endpoints
 
 - **Proxy Support**
   - Added Basic authentication support for external proxy
@@ -83,7 +148,7 @@
 ### Features Added
 
 - **API Key Middleware** (`src/middleware/api-key.middleware.ts`)
-  - Public paths: `/`, `/docs`, `/swagger`, `/swagger.json`
+  - Public paths: `/`, `/health`, `/docs`, `/swagger`, `/swagger.json`
   - Configurable API key list via `API_KEYS` environment variable
   - API key usage logging (truncated for security)
 
@@ -147,3 +212,15 @@ tsoa.json                # tsoa configuration
 - Added per-request credentials documentation
 - Updated deployment guide for Node.js/Express
 - Added API migration guide from v1.0.0 to v2.0.0
+
+---
+
+## v1.0.0 (2025-01-XX)
+
+### Initial Release
+
+- Cloudflare Worker proxy for BHXH API
+- Autonomous login with CAPTCHA solving via AI
+- Session caching in KV namespace
+- Employee data retrieval endpoint
+- Proxy checker with DigitalOcean Functions integration
