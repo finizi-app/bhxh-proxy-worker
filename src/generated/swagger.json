@@ -1,0 +1,963 @@
+{
+	"basePath": "/",
+	"consumes": [
+		"application/json"
+	],
+	"definitions": {
+		"SessionStatusResponse": {
+			"description": "Session status response",
+			"properties": {
+				"status": {
+					"type": "string",
+					"description": "Session status: 'active' | 'expired'"
+				},
+				"expiresIn": {
+					"type": "number",
+					"format": "double",
+					"description": "Seconds until expiration (0 if expired)"
+				},
+				"unit": {
+					"type": "string",
+					"description": "Current unit name"
+				}
+			},
+			"required": [
+				"status",
+				"expiresIn"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"SessionRefreshResponse": {
+			"description": "Session refresh response",
+			"properties": {
+				"success": {
+					"type": "boolean"
+				},
+				"message": {
+					"type": "string"
+				},
+				"unit": {
+					"type": "string"
+				},
+				"expiresIn": {
+					"type": "number",
+					"format": "double"
+				}
+			},
+			"required": [
+				"success",
+				"message",
+				"unit",
+				"expiresIn"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"RefreshRequestBody": {
+			"properties": {
+				"force": {
+					"type": "boolean"
+				}
+			},
+			"type": "object",
+			"additionalProperties": false
+		},
+		"PaperType": {
+			"description": "Paper Types (Code 071)\nDocument types: Sổ hộ khẩu, CCCD, etc.",
+			"properties": {
+				"id": {
+					"type": "number",
+					"format": "double",
+					"description": "Database ID"
+				},
+				"ma": {
+					"type": "string",
+					"description": "Code (ma) - used for references"
+				},
+				"ten": {
+					"type": "string",
+					"description": "Display name (ten) - Vietnamese label"
+				}
+			},
+			"required": [
+				"id",
+				"ma",
+				"ten"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"MasterDataResponse_PaperType_": {
+			"description": "Generic master data list response wrapper",
+			"properties": {
+				"success": {
+					"type": "boolean"
+				},
+				"data": {
+					"items": {
+						"$ref": "#/definitions/PaperType"
+					},
+					"type": "array"
+				}
+			},
+			"required": [
+				"success",
+				"data"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"Country": {
+			"description": "Countries (Code 072)\nISO country codes with Vietnamese names",
+			"properties": {
+				"id": {
+					"type": "number",
+					"format": "double",
+					"description": "Database ID"
+				},
+				"ma": {
+					"type": "string",
+					"description": "Code (ma) - used for references"
+				},
+				"ten": {
+					"type": "string",
+					"description": "Display name (ten) - Vietnamese label"
+				}
+			},
+			"required": [
+				"id",
+				"ma",
+				"ten"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"MasterDataResponse_Country_": {
+			"description": "Generic master data list response wrapper",
+			"properties": {
+				"success": {
+					"type": "boolean"
+				},
+				"data": {
+					"items": {
+						"$ref": "#/definitions/Country"
+					},
+					"type": "array"
+				}
+			},
+			"required": [
+				"success",
+				"data"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"Ethnicity": {
+			"description": "Ethnicities (Code 073)\nVietnamese ethnic groups: Kinh, Tày, Thái, etc.",
+			"properties": {
+				"id": {
+					"type": "number",
+					"format": "double",
+					"description": "Database ID"
+				},
+				"ma": {
+					"type": "string",
+					"description": "Code (ma) - used for references"
+				},
+				"ten": {
+					"type": "string",
+					"description": "Display name (ten) - Vietnamese label"
+				}
+			},
+			"required": [
+				"id",
+				"ma",
+				"ten"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"MasterDataResponse_Ethnicity_": {
+			"description": "Generic master data list response wrapper",
+			"properties": {
+				"success": {
+					"type": "boolean"
+				},
+				"data": {
+					"items": {
+						"$ref": "#/definitions/Ethnicity"
+					},
+					"type": "array"
+				}
+			},
+			"required": [
+				"success",
+				"data"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"LaborPlanType": {
+			"description": "Labor Plan Types (Code 086)\nEmployment change categories",
+			"properties": {
+				"id": {
+					"type": "number",
+					"format": "double",
+					"description": "Database ID"
+				},
+				"ma": {
+					"type": "string",
+					"description": "Code (ma) - used for references"
+				},
+				"ten": {
+					"type": "string",
+					"description": "Display name (ten) - Vietnamese label"
+				}
+			},
+			"required": [
+				"id",
+				"ma",
+				"ten"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"MasterDataResponse_LaborPlanType_": {
+			"description": "Generic master data list response wrapper",
+			"properties": {
+				"success": {
+					"type": "boolean"
+				},
+				"data": {
+					"items": {
+						"$ref": "#/definitions/LaborPlanType"
+					},
+					"type": "array"
+				}
+			},
+			"required": [
+				"success",
+				"data"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"Benefit": {
+			"description": "Benefits (Code 098)\nSocial insurance benefit types (Chế độ)",
+			"properties": {
+				"id": {
+					"type": "number",
+					"format": "double"
+				},
+				"ma_chedo": {
+					"type": "string",
+					"description": "Benefit code (ma_chedo)"
+				},
+				"ten_nhomhuong": {
+					"type": "string",
+					"description": "Benefit group name (ten_nhomhuong)"
+				}
+			},
+			"required": [
+				"id",
+				"ma_chedo",
+				"ten_nhomhuong"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"MasterDataResponse_Benefit_": {
+			"description": "Generic master data list response wrapper",
+			"properties": {
+				"success": {
+					"type": "boolean"
+				},
+				"data": {
+					"items": {
+						"$ref": "#/definitions/Benefit"
+					},
+					"type": "array"
+				}
+			},
+			"required": [
+				"success",
+				"data"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"Relationship": {
+			"description": "Relationships (Code 099)\nFamily/household relationships",
+			"properties": {
+				"id": {
+					"type": "number",
+					"format": "double",
+					"description": "Database ID"
+				},
+				"ma": {
+					"type": "string",
+					"description": "Code (ma) - used for references"
+				},
+				"ten": {
+					"type": "string",
+					"description": "Display name (ten) - Vietnamese label"
+				}
+			},
+			"required": [
+				"id",
+				"ma",
+				"ten"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"MasterDataResponse_Relationship_": {
+			"description": "Generic master data list response wrapper",
+			"properties": {
+				"success": {
+					"type": "boolean"
+				},
+				"data": {
+					"items": {
+						"$ref": "#/definitions/Relationship"
+					},
+					"type": "array"
+				}
+			},
+			"required": [
+				"success",
+				"data"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"HealthResponse": {
+			"properties": {
+				"status": {
+					"type": "string"
+				},
+				"service": {
+					"type": "string"
+				},
+				"timestamp": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"status",
+				"service"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"HealthError": {
+			"properties": {
+				"error": {
+					"type": "string"
+				},
+				"message": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"error",
+				"message"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"Employee": {
+			"description": "Employee model from BHXH API (code 067)",
+			"properties": {
+				"id": {
+					"type": "string",
+					"description": "Employee ID"
+				},
+				"Hoten": {
+					"type": "string",
+					"description": "Full name"
+				},
+				"Masobhxh": {
+					"type": "string",
+					"description": "BHXH number"
+				},
+				"NgaySinh": {
+					"type": "string",
+					"description": "Birth date"
+				},
+				"GioiTinh": {
+					"type": "string",
+					"description": "Gender"
+				},
+				"DiaChi": {
+					"type": "string",
+					"description": "Address"
+				},
+				"maPhongBan": {
+					"type": "string",
+					"description": "Department code"
+				},
+				"maTinhTrang": {
+					"type": "string",
+					"description": "Status code"
+				},
+				"NgayBatDau": {
+					"type": "string",
+					"description": "Work start date"
+				}
+			},
+			"type": "object",
+			"additionalProperties": {
+				"additionalProperties": true
+			}
+		},
+		"EmployeeListResponse": {
+			"description": "Employee list response with pagination",
+			"properties": {
+				"success": {
+					"type": "boolean"
+				},
+				"timing": {
+					"properties": {
+						"totalMs": {
+							"type": "number",
+							"format": "double"
+						},
+						"fetchMs": {
+							"type": "number",
+							"format": "double"
+						},
+						"sessionMs": {
+							"type": "number",
+							"format": "double"
+						}
+					},
+					"required": [
+						"totalMs",
+						"fetchMs",
+						"sessionMs"
+					],
+					"type": "object",
+					"description": "Timing metrics"
+				},
+				"data": {
+					"items": {
+						"$ref": "#/definitions/Employee"
+					},
+					"type": "array",
+					"description": "Array of employee records"
+				},
+				"meta": {
+					"properties": {
+						"unit": {
+							"type": "string"
+						},
+						"count": {
+							"type": "number",
+							"format": "double"
+						},
+						"total": {
+							"type": "number",
+							"format": "double"
+						}
+					},
+					"required": [
+						"unit",
+						"count",
+						"total"
+					],
+					"type": "object",
+					"description": "Response metadata"
+				}
+			},
+			"required": [
+				"success",
+				"timing",
+				"data",
+				"meta"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"LookupResponse": {
+			"description": "Lookup API response",
+			"properties": {
+				"success": {
+					"type": "boolean"
+				},
+				"data": {
+					"additionalProperties": true
+				}
+			},
+			"required": [
+				"success",
+				"data"
+			],
+			"type": "object",
+			"additionalProperties": false
+		}
+	},
+	"info": {
+		"title": "bhxh-api",
+		"version": 3,
+		"contact": {}
+	},
+	"paths": {
+		"/api/v1/session/status": {
+			"get": {
+				"operationId": "GetSessionStatus",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/SessionStatusResponse"
+						}
+					}
+				},
+				"description": "Get current session status",
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v1/session/refresh": {
+			"post": {
+				"operationId": "Refresh",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Session refreshed",
+						"schema": {
+							"$ref": "#/definitions/SessionRefreshResponse"
+						}
+					},
+					"500": {
+						"description": "Refresh failed",
+						"schema": {
+							"properties": {
+								"message": {
+									"type": "string"
+								},
+								"error": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"message",
+								"error"
+							],
+							"type": "object"
+						}
+					}
+				},
+				"consumes": [
+					"application/json"
+				],
+				"description": "Refresh session token",
+				"security": [],
+				"parameters": [
+					{
+						"description": "- Optional request body with force flag",
+						"in": "body",
+						"name": "body",
+						"required": false,
+						"schema": {
+							"$ref": "#/definitions/RefreshRequestBody"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/master-data/paper-types": {
+			"get": {
+				"operationId": "GetPaperTypes",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/MasterDataResponse_PaperType_"
+						}
+					},
+					"500": {
+						"description": "Failed to fetch paper types",
+						"schema": {
+							"properties": {
+								"message": {
+									"type": "string"
+								},
+								"error": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"message",
+								"error"
+							],
+							"type": "object"
+						}
+					}
+				},
+				"description": "Get paper types (Code 071)\nDocument types: Sổ hộ khẩu, CCCD/ĐDCN, etc.",
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v1/master-data/countries": {
+			"get": {
+				"operationId": "GetCountries",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/MasterDataResponse_Country_"
+						}
+					},
+					"500": {
+						"description": "Failed to fetch countries",
+						"schema": {
+							"properties": {
+								"message": {
+									"type": "string"
+								},
+								"error": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"message",
+								"error"
+							],
+							"type": "object"
+						}
+					}
+				},
+				"description": "Get countries (Code 072)\nISO country codes with Vietnamese names",
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v1/master-data/ethnicities": {
+			"get": {
+				"operationId": "GetEthnicities",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/MasterDataResponse_Ethnicity_"
+						}
+					},
+					"500": {
+						"description": "Failed to fetch ethnicities",
+						"schema": {
+							"properties": {
+								"message": {
+									"type": "string"
+								},
+								"error": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"message",
+								"error"
+							],
+							"type": "object"
+						}
+					}
+				},
+				"description": "Get ethnicities (Code 073)\nVietnamese ethnic groups: Kinh, Tày, Thái, etc.",
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v1/master-data/labor-plan-types": {
+			"get": {
+				"operationId": "GetLaborPlanTypes",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/MasterDataResponse_LaborPlanType_"
+						}
+					},
+					"500": {
+						"description": "Failed to fetch labor plan types",
+						"schema": {
+							"properties": {
+								"message": {
+									"type": "string"
+								},
+								"error": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"message",
+								"error"
+							],
+							"type": "object"
+						}
+					}
+				},
+				"description": "Get labor plan types (Code 086)\nEmployment change categories: Tăng lao động, Giảm lao động, etc.",
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v1/master-data/benefits": {
+			"get": {
+				"operationId": "GetBenefits",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/MasterDataResponse_Benefit_"
+						}
+					},
+					"500": {
+						"description": "Failed to fetch benefits",
+						"schema": {
+							"properties": {
+								"message": {
+									"type": "string"
+								},
+								"error": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"message",
+								"error"
+							],
+							"type": "object"
+						}
+					}
+				},
+				"description": "Get benefits (Code 098)\nSocial insurance benefit types (Chế độ): Dưỡng sức, ốm đau, etc.",
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v1/master-data/relationships": {
+			"get": {
+				"operationId": "GetRelationships",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/MasterDataResponse_Relationship_"
+						}
+					},
+					"500": {
+						"description": "Failed to fetch relationships",
+						"schema": {
+							"properties": {
+								"message": {
+									"type": "string"
+								},
+								"error": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"message",
+								"error"
+							],
+							"type": "object"
+						}
+					}
+				},
+				"description": "Get relationships (Code 099)\nFamily/household relationships: Chủ hộ, Vợ, Chồng, Con, etc.",
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/health": {
+			"get": {
+				"operationId": "GetHealth",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/HealthResponse"
+						}
+					},
+					"503": {
+						"description": "Service unavailable",
+						"schema": {
+							"$ref": "#/definitions/HealthError"
+						}
+					}
+				},
+				"description": "Check service health status",
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v1/employees": {
+			"get": {
+				"operationId": "GetEmployees",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/EmployeeListResponse"
+						}
+					},
+					"500": {
+						"description": "Failed to fetch employees",
+						"schema": {
+							"properties": {
+								"message": {
+									"type": "string"
+								},
+								"error": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"message",
+								"error"
+							],
+							"type": "object"
+						}
+					}
+				},
+				"description": "Get all employees for current unit",
+				"security": [],
+				"parameters": [
+					{
+						"description": "- Filter by employee code",
+						"in": "query",
+						"name": "maNguoiLaoDong",
+						"required": false,
+						"type": "string"
+					},
+					{
+						"description": "- Filter by name",
+						"in": "query",
+						"name": "ten",
+						"required": false,
+						"type": "string"
+					},
+					{
+						"description": "- Filter by department",
+						"in": "query",
+						"name": "maPhongBan",
+						"required": false,
+						"type": "string"
+					},
+					{
+						"description": "- Filter by status",
+						"in": "query",
+						"name": "maTinhTrang",
+						"required": false,
+						"type": "string"
+					},
+					{
+						"description": "- Filter by BHXH number",
+						"in": "query",
+						"name": "MaSoBhxh",
+						"required": false,
+						"type": "string"
+					},
+					{
+						"description": "- Page number (default 1)",
+						"in": "query",
+						"name": "PageIndex",
+						"required": false,
+						"format": "double",
+						"type": "number"
+					},
+					{
+						"description": "- Page size (default 100)",
+						"in": "query",
+						"name": "PageSize",
+						"required": false,
+						"format": "double",
+						"type": "number"
+					}
+				]
+			}
+		},
+		"/api/v1/lookup/{code}": {
+			"get": {
+				"operationId": "Lookup",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/LookupResponse"
+						}
+					},
+					"500": {
+						"description": "Lookup failed",
+						"schema": {
+							"properties": {
+								"message": {
+									"type": "string"
+								},
+								"error": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"message",
+								"error"
+							],
+							"type": "object"
+						}
+					}
+				},
+				"description": "Lookup data by API code",
+				"security": [],
+				"parameters": [
+					{
+						"description": "- API code to call (e.g., 067, 068)",
+						"in": "path",
+						"name": "code",
+						"required": true,
+						"type": "string"
+					}
+				]
+			}
+		}
+	},
+	"produces": [
+		"application/json"
+	],
+	"swagger": "2.0",
+	"securityDefinitions": {}
+}
