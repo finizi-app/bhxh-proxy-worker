@@ -11,12 +11,13 @@
             "ES2022"
         ],
         "types": [
-            "@cloudflare/workers-types",
             "@types/crypto-js"
         ],
         "resolveJsonModule": true,
         "isolatedModules": true,
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
     },
     "include": [
         "src/**/*"

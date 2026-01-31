@@ -1,5 +1,5 @@
 {
-  "name": "bhxh-proxy-worker",
+  "name": "bhxh-api",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -9,26 +9,23 @@
     "swagger": "tsoa spec",
     "routes": "tsoa routes",
     "start": "npx tsx src/local-server.ts",
-    "deploy": "wrangler deploy",
-    "cf-typegen": "wrangler types",
-    "local": "node server-local.js",
     "docs:validate": "swagger-cli validate api-docs/openapi.yaml",
-    "docs:generate": "node scripts/generate-api-docs.js"
+    "docs:generate": "node scripts/generate-api-docs.js",
+    "test": "vitest"
   },
   "dependencies": {
     "axios": "^1.13.4",
     "crypto-js": "^4.2.0",
     "dotenv": "^17.2.3",
-    "express": "^5.2.1",
+    "express": "^4.22.1",
     "https-proxy-agent": "^7.0.6",
     "js-yaml": "^4.1.1",
     "swagger-ui-express": "^5.0.1",
-    "tsoa": "^7.0.0-alpha.0",
+    "tsoa": "^6.6.0",
     "undici": "^5.29.0"
   },
   "devDependencies": {
     "@apidevtools/swagger-cli": "^4.0.4",
-    "@cloudflare/workers-types": "^4.20250129.0",
     "@swc/core": "^1.15.11",
     "@swc/helpers": "^0.5.18",
     "@types/crypto-js": "^4.2.2",
@@ -39,7 +36,6 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.7.0",
-    "vitest": "^4.0.18",
-    "wrangler": "^4.0.0"
+    "vitest": "^4.0.18"
   }
 }

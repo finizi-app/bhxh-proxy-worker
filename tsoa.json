@@ -1,0 +1,14 @@
+{
+  "entryFile": "src/local-server.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/controllers/*controller.ts"],
+  "spec": {
+    "outputDirectory": "./src/generated",
+    "specFileBaseName": "swagger",
+    "version": 3
+  },
+  "routes": {
+    "routesDir": "./src/generated",
+    "routesFileName": "routes.ts"
+  }
+}
