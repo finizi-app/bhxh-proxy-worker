@@ -24,6 +24,8 @@ function buildDepartmentListPayload(
   return {
     ma: query?.ma || "",
     ten: query?.ten || "",
+    madonvi: session.currentDonVi.Ma || "",
+    macoquan: session.currentDonVi.MaCoquan || "",
     masobhxhuser: session.currentDonVi.Ma || "",
     macoquanuser: session.currentDonVi.MaCoquan || "",
     loaidoituonguser: session.currentDonVi.LoaiDoiTuong || "1",
@@ -43,6 +45,8 @@ export async function createDepartment(
   const payload = {
     ...request,
     id: null,
+    madonvi: session.currentDonVi.Ma || "",
+    macoquan: session.currentDonVi.MaCoquan || "",
     masobhxhuser: session.currentDonVi.Ma || "",
     macoquanuser: session.currentDonVi.MaCoquan || "",
     loaidoituonguser: session.currentDonVi.LoaiDoiTuong || "1",
@@ -75,6 +79,8 @@ export async function updateDepartment(
   const payload = {
     ...request,
     id,
+    madonvi: session.currentDonVi.Ma || "",
+    macoquan: session.currentDonVi.MaCoquan || "",
     masobhxhuser: session.currentDonVi.Ma || "",
     macoquanuser: session.currentDonVi.MaCoquan || "",
     loaidoituonguser: session.currentDonVi.LoaiDoiTuong || "1",
@@ -138,6 +144,8 @@ export async function deleteDepartment(
   const api = createAxios();
   const payload = {
     id,
+    madonvi: session.currentDonVi.Ma || "",
+    macoquan: session.currentDonVi.MaCoquan || "",
     masobhxhuser: session.currentDonVi.Ma || "",
     macoquanuser: session.currentDonVi.MaCoquan || "",
     loaidoituonguser: session.currentDonVi.LoaiDoiTuong || "1",
