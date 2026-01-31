@@ -5,12 +5,24 @@
 import express from "express";
 import axios from "axios";
 import CryptoJS from "crypto-js";
+import { HttpsProxyAgent } from "https-proxy-agent";
+import swaggerUi from "swagger-ui-express";
 import dotenv from "dotenv";
 dotenv.config({ path: ".dev.vars" });
 
 const app = express();
 app.use(express.json());
 app.use(profileRequest);
+
+// Swagger UI at /docs
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(undefined, {
+  swaggerOptions: { url: "/swagger.json" }
+}));
+
+// Serve swagger.json
+app.get("/swagger.json", (_req, res) => {
+  res.sendFile("swagger.json", { root: "./src/generated" });
+});
 
 // Profiling middleware
 function profileRequest(req, res, next) {
@@ -27,6 +39,25 @@ const BASE_URL = process.env.BHXH_BASE_URL || "https://dichvucong.baohiemxahoi.g
 const ENCRYPTION_KEY = process.env.BHXH_ENCRYPTION_KEY || "S6|d'qc1GG,'rx&xn0XC";
 const AI_ENDPOINT = process.env.AI_CAPTCHA_ENDPOINT || "http://34.126.156.34:4000/api/v1/captcha/solve";
 const API_KEY = process.env.AI_CAPTCHA_API_KEY;
+const USE_PROXY = process.env.USE_PROXY === "true";
+const PROXY_URL = process.env.EXTERNAL_PROXY_URL;
+const PROXY_USERNAME = process.env.EXTERNAL_PROXY_USERNAME;
+const PROXY_PASSWORD = process.env.EXTERNAL_PROXY_PASSWORD;
+
+// Get HTTPS agent with proxy
+function getHttpsAgent() {
+    if (!USE_PROXY || !PROXY_URL) return undefined;
+    const auth = PROXY_USERNAME && PROXY_PASSWORD ? `${PROXY_USERNAME}:${PROXY_PASSWORD}@` : "";
+    const proxyFullUrl = `http://${auth}${new URL(PROXY_URL).host}`;
+    return new HttpsProxyAgent(proxyFullUrl);
+}
+
+// Create axios instance with proxy
+function createAxios() {
+    return axios.create({
+        httpsAgent: getHttpsAgent(),
+    });
+}
 
 // In-memory session cache
 let cachedSession = null;
@@ -81,9 +112,10 @@ async function performLogin() {
     const t0 = Date.now();
     let tClientId = 0, tCaptcha = 0, tSolve = 0, tLogin = 0;
 
+    const api = createAxios();
     console.log("1. Fetching Client ID...");
     const t1 = Date.now();
-    const clientIdResp = await axios.get(`${BASE_URL}/oauth2/GetClientId`, {
+    const clientIdResp = await api.get(`${BASE_URL}/oauth2/GetClientId`, {
         headers: {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
             "Accept": "application/json",
@@ -105,7 +137,7 @@ async function performLogin() {
         console.log(`\n2. Fetching Captcha (Attempt ${attempt}/${MAX_CAPTCHA_RETRIES})...`);
         const tCaptchaStart = Date.now();
 
-        const captchaResp = await axios.post(`${BASE_URL}/api/getCaptchaImage`, {
+        const captchaResp = await api.post(`${BASE_URL}/api/getCaptchaImage`, {
             height: 60,
             width: 300,
         }, {
@@ -141,7 +173,7 @@ async function performLogin() {
 
     console.log("4. Logging in...");
     const tLoginStart = Date.now();
-    const loginResp = await axios.post(`${BASE_URL}/token`, new URLSearchParams({
+    const loginResp = await api.post(`${BASE_URL}/token`, new URLSearchParams({
         grant_type: "password",
         username: process.env.BHXH_USERNAME || "",
         password: process.env.BHXH_PASSWORD || "",
@@ -239,6 +271,7 @@ app.get("/api/v1/employees", async (req, res) => {
         const t2 = Date.now();
         console.log("Fetching employees for unit:", session.currentDonVi.Ma);
 
+        const api = createAxios();
         const payload = {
             maNguoiLaoDong: "",
             ten: "",
@@ -254,7 +287,7 @@ app.get("/api/v1/employees", async (req, res) => {
             loaidoituonguser: session.currentDonVi.LoaiDoiTuong || "1",
         };
 
-        const response = await axios.post(`${BASE_URL}/CallApiWithCurrentUser`, {
+        const response = await api.post(`${BASE_URL}/CallApiWithCurrentUser`, {
             code: "067",
             data: JSON.stringify(payload),
         }, {
@@ -298,6 +331,7 @@ app.get("/api/v1/lookup/:code", async (req, res) => {
     try {
         const session = await getValidSession();
         const code = req.params.code;
+        const api = createAxios();
 
         const payload = {
             masobhxhuser: session.currentDonVi.Ma,
@@ -305,7 +339,7 @@ app.get("/api/v1/lookup/:code", async (req, res) => {
             loaidoituonguser: session.currentDonVi.LoaiDoiTuong || "1",
         };
 
-        const response = await axios.post(`${BASE_URL}/CallApiWithCurrentUser`, {
+        const response = await api.post(`${BASE_URL}/CallApiWithCurrentUser`, {
             code,
             data: JSON.stringify(payload),
         }, {
@@ -323,9 +357,11 @@ app.get("/api/v1/lookup/:code", async (req, res) => {
     }
 });
 
+const HOST = process.env.HOST || "0.0.0.0";
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, HOST, () => {
     console.log(`BHXH Local API Server running on http://localhost:${PORT}`);
     console.log(`BASE_URL: ${BASE_URL}`);
+    console.log(`Proxy: ${USE_PROXY ? PROXY_URL : "disabled"}`);
     console.log(`Use /api/v1/employees to fetch employees`);
 });

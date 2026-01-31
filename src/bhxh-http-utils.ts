@@ -3,6 +3,8 @@
  * HTTP helpers, retry logic, and proxy configuration
  */
 
+import { ProxyAgent, fetch as undiciFetch } from 'undici';
+
 export const DEFAULT_TIMEOUT = 15000; // 15 seconds
 export const MAX_PAGE_SIZE = 500;
 
@@ -35,29 +37,42 @@ export const STANDARD_HEADERS = {
     "Accept-Language": "vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7",
 };
 
+export interface ProxyCredentials {
+    username: string;
+    password: string;
+}
+
 /**
- * Make HTTP request with optional proxy
+ * Make HTTP request with optional CONNECT proxy (undici.ProxyAgent)
+ * Supports HTTP Basic authentication for proxies
  */
 export async function bhxhFetch(
-    baseUrl: string,
-    path: string,
+    targetUrl: string,
     init: RequestInit = {},
-    proxyUrl?: string
+    proxyUrl?: string,
+    proxyAuth?: ProxyCredentials
 ): Promise<Response> {
-    const targetUrl = `${baseUrl}${path}`;
+    const headers = { ...STANDARD_HEADERS, ...init.headers };
 
     if (!proxyUrl) {
-        return fetch(targetUrl, {
-            ...init,
-            headers: { ...STANDARD_HEADERS, ...init.headers },
-        });
+        return fetch(targetUrl, { ...init, headers });
     }
 
-    // Route through simple forward proxy
-    const proxyEndpoint = `${proxyUrl}/proxy?url=${encodeURIComponent(targetUrl)}`;
-    return fetch(proxyEndpoint, {
-        method: init.method || "GET",
-        headers: { ...STANDARD_HEADERS, ...init.headers },
-        body: init.body,
-    });
+    // Build ProxyAgent with optional auth
+    const agentOptions: any = {
+        uri: proxyUrl,
+        connect: {
+            rejectUnauthorized: false,
+            timeout: 15000,
+        },
+    };
+
+    // Add Basic auth if credentials provided
+    if (proxyAuth?.username && proxyAuth?.password) {
+        const token = btoa(`${proxyAuth.username}:${proxyAuth.password}`);
+        agentOptions.token = `Basic ${token}`;
+    }
+
+    const dispatcher = new ProxyAgent(agentOptions);
+    return undiciFetch(targetUrl, { ...init, headers, dispatcher });
 }

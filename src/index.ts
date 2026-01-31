@@ -13,6 +13,7 @@ import type { Session, DonVi } from "./bhxh-types";
 import { Env, getValidSession, saveSession } from "./auth";
 import { encryptXClient } from "./crypto";
 import { ProxyManager } from "./proxy-manager";
+import type { ProxyCredentials } from "./bhxh-http-utils";
 
 // Rate limiting
 const requestCounts = new Map<string, number>();
@@ -31,6 +32,28 @@ function checkRateLimit(key: string): boolean {
         }
     }
     return true;
+}
+
+/**
+ * Get proxy configuration from environment
+ */
+function getProxyConfig(env: Env): { url?: string; auth?: ProxyCredentials } {
+    const useProxy = env.USE_PROXY === "true";
+    if (!useProxy || !env.EXTERNAL_PROXY_URL) {
+        return {};
+    }
+    const auth = env.EXTERNAL_PROXY_USERNAME && env.EXTERNAL_PROXY_PASSWORD
+        ? { username: env.EXTERNAL_PROXY_USERNAME, password: env.EXTERNAL_PROXY_PASSWORD }
+        : undefined;
+    return { url: env.EXTERNAL_PROXY_URL, auth };
+}
+
+/**
+ * Create BHXHClient with proxy support
+ */
+function createClient(env: Env): BHXHClient {
+    const { url, auth } = getProxyConfig(env);
+    return new BHXHClient(env.BHXH_BASE_URL, url, auth);
 }
 
 export default {
@@ -141,9 +164,7 @@ async function handleEmployees(
     console.log("Session obtained, unit:", session.currentDonVi.Ten || session.currentDonVi.TenDonVi);
 
     // Fetch employees
-    const useProxy = env.USE_PROXY === "true";
-    const proxyUrl = useProxy ? env.EXTERNAL_PROXY_URL : undefined;
-    const client = new BHXHClient(env.BHXH_BASE_URL, proxyUrl);
+    const client = createClient(env);
     const result = await client.fetchEmployees(session);
 
     console.log(`Fetched ${result.dsLaoDong.length} employees, total: ${result.TotalRecords}`);
@@ -224,9 +245,7 @@ async function handleLoginCaptcha(
     corsHeaders: Record<string, string>
 ): Promise<Response> {
     console.log("Getting captcha for manual login...");
-    const useProxy = env.USE_PROXY === "true";
-    const proxyUrl = useProxy ? env.EXTERNAL_PROXY_URL : undefined;
-    const client = new BHXHClient(env.BHXH_BASE_URL, proxyUrl);
+    const client = createClient(env);
 
     // Step 1: Get client ID
     const clientId = await client.getClientId();
@@ -286,9 +305,7 @@ async function handleLoginToken(
     }
 
     console.log("Attempting login with captcha solution...");
-    const useProxy = env.USE_PROXY === "true";
-    const proxyUrl = useProxy ? env.EXTERNAL_PROXY_URL : undefined;
-    const client = new BHXHClient(env.BHXH_BASE_URL, proxyUrl);
+    const client = createClient(env);
 
     // Perform login
     const loginResponse = await client.login(
@@ -363,9 +380,7 @@ async function handleLookup(
 ): Promise<Response> {
     try {
         const session = await getValidSession(env);
-        const useProxy = env.USE_PROXY === "true";
-        const proxyUrl = useProxy ? env.EXTERNAL_PROXY_URL : undefined;
-        const client = new BHXHClient(env.BHXH_BASE_URL, proxyUrl);
+        const client = createClient(env);
         const data = await client.fetchLookupData(session, code);
         return Response.json({ success: true, data }, { headers: corsHeaders });
     } catch (error) {

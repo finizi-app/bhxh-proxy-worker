@@ -19,6 +19,8 @@ export interface Env {
     BHXH_ENCRYPTION_KEY: string;
     AI_CAPTCHA_ENDPOINT: string;
     EXTERNAL_PROXY_URL?: string;
+    EXTERNAL_PROXY_USERNAME?: string;
+    EXTERNAL_PROXY_PASSWORD?: string;
     USE_PROXY?: string;
     AI_CAPTCHA_API_KEY?: string;
 }
@@ -144,11 +146,14 @@ async function solveCaptcha(
 export async function performLogin(env: Env): Promise<Session> {
     const useProxy = env.USE_PROXY === "true";
     const proxyUrl = useProxy ? env.EXTERNAL_PROXY_URL : undefined;
+    const proxyAuth = useProxy && env.EXTERNAL_PROXY_USERNAME && env.EXTERNAL_PROXY_PASSWORD
+        ? { username: env.EXTERNAL_PROXY_USERNAME, password: env.EXTERNAL_PROXY_PASSWORD }
+        : undefined;
 
     // Log proxy usage for debugging
     console.log(`Login init: Proxy enabled=${useProxy}, URL=${proxyUrl || 'none'}`);
 
-    const client = new BHXHClient(env.BHXH_BASE_URL, proxyUrl);
+    const client = new BHXHClient(env.BHXH_BASE_URL, proxyUrl, proxyAuth);
     const username = env.BHXH_USERNAME;
     const password = env.BHXH_PASSWORD;
 

@@ -24,3 +24,5 @@ ALLOWED_ORIGINS = "*"
 # wrangler secret put BHXH_ENCRYPTION_KEY
 # wrangler secret put AI_CAPTCHA_ENDPOINT
 # wrangler secret put AI_CAPTCHA_API_KEY
+# wrangler secret put EXTERNAL_PROXY_USERNAME
+# wrangler secret put EXTERNAL_PROXY_PASSWORD
