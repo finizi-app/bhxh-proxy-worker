@@ -13,8 +13,9 @@ This document catalogs the API endpoints discovered during reverse engineering. 
 ## 1. Employee Management
 
 *   **[Code 067](code-067.md)** - Get employee list
-*   **[Code 172](code-172.md)** - Get employee details
-*   See [employee_api_docs.md](employee_api_docs.md) for comprehensive documentation.
+*   **[Code 172](code-172.md)** - Get employee details (Draft/Internal)
+*   **[Code 156](code-156.md)** - Get employee official data (Sync/Validation)
+*   See [employee_api_docs.md](employee_api_docs.md) and [edit_employee_flow.md](edit_employee_flow.md).
 
 ---
 
@@ -56,6 +57,7 @@ These APIs return dictionaries/catalogs used for dropdowns and mapping codes.
 | **086** | **Labor Plan Types**        | Array              | `{"ma": 1, "ten": "Tăng lao động"}`                                                                |
 | **098** | **Chedo / Benefits**        | Array              | `{"ma_chedo": "DS", "ten_nhomhuong": "Dưỡng sức"}`                                                 |
 | **099** | **Relationships**           | Array              | `{"ma": "00", "ten": "Chủ hộ"}` (Head of Household)                                                |
+| **063** | **Districts**               | Array              | `{"maTinh": "79"}` -> List of districts (Quan 1, Quan 3...)                                        |
 | **028** | **Document List (Thủ tục)** | Array (Paginated)  | Returns list of administrative procedures. See [Procedure API Master Page](procedure_api_docs.md). |
 
 ### Common Metadata Payload
@@ -75,10 +77,10 @@ Most metadata APIs just require the user context fields:
 
 ## 3. Other/Unknown Codes
 
-| Code    | Notes                                                                                          |
-| ------- | ---------------------------------------------------------------------------------------------- |
-| **156** | Failed in probe. Payload included `masoBhxh`. Possibly for validating SSN or insurance status. |
-| **063** | Observed in logs. Likely "Get Districts" or "Get Data by Province".                            |
+| Code | Notes |
+| ---- | ----- |
+
+| **063** | Documeted as [Code 063](code-063.md) (Get Districts).                                           |
 
 ## 4. System/Utility Endpoints
 
