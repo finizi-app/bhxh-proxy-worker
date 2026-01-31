@@ -24,7 +24,7 @@ import {
   Request,
 } from "tsoa";
 import { Request as ExpressRequest } from "express";
-import {
+import type {
   EmployeeListResponse,
   EmployeesQueryParams,
   EmployeeDetailResponse,
@@ -33,9 +33,13 @@ import {
   EmployeeUpdateResponse,
   EmployeeSyncResponse,
   EmployeeOfficialData,
+  Employee,
 } from "../models/employee.model";
+import type {
+  FullEmployeeDetailsResponse,
+} from "../models/code-600.model";
 import { getValidSession } from "../services/session.service";
-import { fetchEmployees, updateEmployee, syncEmployee, getEmployeeDetail } from "../services/bhxh.service";
+import { fetchEmployees, updateEmployee, syncEmployee, getEmployeeDetail, fetchFullEmployeeDetails } from "../services/bhxh.service";
 
 /**
  * Employees controller for fetching employee data
@@ -143,6 +147,50 @@ export class EmployeesController extends Controller {
       console.error("Employee detail fetch error:", message);
       throw {
         error: "Failed to fetch employee detail",
+        message,
+      };
+    }
+  }
+
+  /**
+   * Get full employee details by IDs (Code 117)
+   * Fetches comprehensive employee data including contracts, salary, family, history
+   * @param req Express request with auth headers
+   * @param requestBody Employee IDs and optional credentials
+   * @returns Full employee details with contracts, salary, family members, history
+   */
+  @Post("details")
+  @SuccessResponse(200, "OK")
+  @Response<{ error: string; message: string }>(400, "Invalid request")
+  @Response<{ error: string; message: string }>(500, "Failed to fetch employee details")
+  public async getFullEmployeeDetails(
+    @Request() req: any,
+    @Body() requestBody: { listNldid: number[] }
+  ): Promise<FullEmployeeDetailsResponse> {
+    const t0 = Date.now();
+
+    try {
+      const session = await getValidSession(req?.request);
+
+      if (!requestBody.listNldid || requestBody.listNldid.length === 0) {
+        return {
+          success: false,
+          message: "listNldid is required and must not be empty",
+        };
+      }
+
+      console.log(`Fetching details for ${requestBody.listNldid.length} employees`);
+      const result = await fetchFullEmployeeDetails(session, requestBody.listNldid);
+
+      const totalMs = Date.now() - t0;
+      console.log(`[TIMING] Code 117 fetch: ${totalMs}ms`);
+
+      return result;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unknown error";
+      console.error("Code 117 fetch error:", message);
+      throw {
+        error: "Failed to fetch employee details",
         message,
       };
     }

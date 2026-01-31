@@ -10,6 +10,13 @@ import {
   EmployeeListResponse,
   EmployeesQueryParams,
 } from "../models/employee.model";
+import type {
+  FullEmployeeDetailsRequest,
+  FullEmployeeDetailsResponse,
+  Code600SubmitRequest,
+  Code600SubmitResponse,
+} from "../models/code-600.model";
+import type { D02TSNguoiLaoDong } from "../models/d02-ts-nguoi-lao-dong.model";
 import { CaptchaResponse, CaptchaSolveRequest, CaptchaSolveResponse } from "../models/proxy.model";
 import { Session } from "../models/session.model";
 
@@ -366,6 +373,128 @@ export async function getEmployeeDetail(
   return response.data;
 }
 
+/**
+ * Fetch full employee details by IDs (Code 117)
+ * Returns comprehensive employee data including contracts, salary, family, history
+ * @param session - Valid session with token and unit info
+ * @param listNldid - Array of employee IDs to fetch
+ * @returns Full employee details response
+ */
+export async function fetchFullEmployeeDetails(
+  session: Session,
+  listNldid: number[]
+): Promise<FullEmployeeDetailsResponse> {
+  const api = createAxios();
+
+  const payload: FullEmployeeDetailsRequest = {
+    listNldid,
+    masobhxhuser: session.currentDonVi.Ma || "",
+    macoquanuser: session.currentDonVi.MaCoquan || "",
+    loaidoituonguser: session.currentDonVi.LoaiDoiTuong || "1",
+  };
+
+  try {
+    const response = await api.post(
+      `${CONFIG.baseUrl}/CallApiWithCurrentUser`,
+      { code: "117", data: JSON.stringify(payload) },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.token}`,
+          "X-CLIENT": session.xClient,
+        },
+      }
+    );
+
+    return {
+      success: true,
+      data: response.data as FullEmployeeDetailsResponse["data"],
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("Code 117 fetch error:", message);
+    throw new Error(`Failed to fetch full employee details: ${message}`);
+  }
+}
+
+/**
+ * Normalize D02-TS employee data for API submission
+ * Ensures tienLuong is always string (required by BHXH API)
+ * @param employee - Raw employee data
+ * @returns Normalized employee data
+ */
+function normalizeD02Employee(employee: D02TSNguoiLaoDong): D02TSNguoiLaoDong {
+  return {
+    ...employee,
+    // Ensure tienLuong is always string (BHXH API requirement)
+    tienLuong: typeof employee.tienLuong === 'number'
+      ? String(employee.tienLuong)
+      : employee.tienLuong,
+  };
+}
+
+/**
+ * Submit Code 600 declaration form (Code 084)
+ * Submits D02-TS, TK1-TS, or D01-TS forms for monthly contributions
+ * @param session - Valid session with token and unit info
+ * @param submitRequest - Declaration form data with thuTuc and form sections
+ * @returns Submission result with thuTucId
+ */
+export async function submitCode600Form(
+  session: Session,
+  submitRequest: Omit<Code600SubmitRequest, "username" | "password">
+): Promise<Code600SubmitResponse> {
+  const api = createAxios();
+
+  // Normalize D02-TS employee data
+  const normalizedD02 = submitRequest["D02-TS"]?.nguoiLaoDong
+    ? {
+        ...submitRequest["D02-TS"],
+        nguoiLaoDong: submitRequest["D02-TS"].nguoiLaoDong.map(normalizeD02Employee),
+      }
+    : undefined;
+
+  // Build payload with session context and normalized data
+  const payload = {
+    ...submitRequest,
+    // Override with normalized D02-TS data
+    ...(normalizedD02 && { "D02-TS": normalizedD02 }),
+    // Ensure thuTuc has session context
+    thuTuc: {
+      ...submitRequest.thuTuc,
+      maDonVi: session.currentDonVi.Ma || submitRequest.thuTuc.maDonVi,
+      maCoQuan: session.currentDonVi.MaCoquan || submitRequest.thuTuc.maCoQuan,
+    },
+  };
+
+  try {
+    const response = await api.post(
+      `${CONFIG.baseUrl}/CallApiWithCurrentUser`,
+      { code: "084", data: JSON.stringify(payload) },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.token}`,
+          "X-CLIENT": session.xClient,
+        },
+      }
+    );
+
+    const result = response.data as { success?: boolean; message?: string; thuTucId?: number };
+
+    return {
+      success: result.success ?? true,
+      message: result.message || "Form submitted successfully",
+      thuTucId: result.thuTucId,
+      data: result,
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("Code 084 submit error:", message);
+    throw new Error(`Failed to submit declaration form: ${message}`);
+  }
+}
+
 export default {
   encryptXClient,
   solveCaptcha,
@@ -377,4 +506,6 @@ export default {
   updateEmployee,
   syncEmployee,
   getEmployeeDetail,
+  fetchFullEmployeeDetails,
+  submitCode600Form,
 };

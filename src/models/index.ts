@@ -70,3 +70,28 @@ export type {
   DistrictListQueryParams,
   GeographicListResponse,
 } from "./geographic.model";
+
+// Code 600 Declaration types
+export type {
+  FullEmployeeDetailsRequest,
+  FullEmployeeDetailsResponse,
+  FullEmployeeDetails,
+  Code600ThuTuc,
+  Code600FormSection,
+  Code600D02FormSection,
+  Code600TK1FormSection,
+  Code600D01FormSection,
+  Code600TK1Employee,
+  Code600ToKhai,
+  Code600SubmitRequest,
+  Code600SubmitResponse,
+} from "./code-600.model";
+
+// D02-TS NguoiLaoDong types (actual API structure)
+export type {
+  D02MethodCode,
+  D02StatusCode,
+  D02TSNguoiLaoDong,
+  D02TSFormSection,
+  D02TSEmployeeMinimal,
+} from "./d02-ts-nguoi-lao-dong.model";
