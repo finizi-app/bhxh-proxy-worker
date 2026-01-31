@@ -490,8 +490,7 @@ export function RegisterRoutes(app: Router) {
 
     
         const argsSessionController_getSessionStatus: Record<string, TsoaRoute.ParameterSchema> = {
-                username: {"in":"query","name":"username","dataType":"string"},
-                password: {"in":"query","name":"password","dataType":"string"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
         app.get('/api/v1/session/status',
             ...(fetchMiddlewares<RequestHandler>(SessionController)),
@@ -521,6 +520,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsSessionController_refresh: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 body: {"in":"body","name":"body","ref":"RefreshRequestBody"},
         };
         app.post('/api/v1/session/refresh',
@@ -551,8 +551,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsMasterDataController_getPaperTypes: Record<string, TsoaRoute.ParameterSchema> = {
-                username: {"in":"query","name":"username","dataType":"string"},
-                password: {"in":"query","name":"password","dataType":"string"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
         app.get('/api/v1/master-data/paper-types',
             ...(fetchMiddlewares<RequestHandler>(MasterDataController)),
@@ -582,8 +581,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsMasterDataController_getCountries: Record<string, TsoaRoute.ParameterSchema> = {
-                username: {"in":"query","name":"username","dataType":"string"},
-                password: {"in":"query","name":"password","dataType":"string"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
         app.get('/api/v1/master-data/countries',
             ...(fetchMiddlewares<RequestHandler>(MasterDataController)),
@@ -613,8 +611,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsMasterDataController_getEthnicities: Record<string, TsoaRoute.ParameterSchema> = {
-                username: {"in":"query","name":"username","dataType":"string"},
-                password: {"in":"query","name":"password","dataType":"string"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
         app.get('/api/v1/master-data/ethnicities',
             ...(fetchMiddlewares<RequestHandler>(MasterDataController)),
@@ -644,8 +641,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsMasterDataController_getLaborPlanTypes: Record<string, TsoaRoute.ParameterSchema> = {
-                username: {"in":"query","name":"username","dataType":"string"},
-                password: {"in":"query","name":"password","dataType":"string"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
         app.get('/api/v1/master-data/labor-plan-types',
             ...(fetchMiddlewares<RequestHandler>(MasterDataController)),
@@ -675,8 +671,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsMasterDataController_getBenefits: Record<string, TsoaRoute.ParameterSchema> = {
-                username: {"in":"query","name":"username","dataType":"string"},
-                password: {"in":"query","name":"password","dataType":"string"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
         app.get('/api/v1/master-data/benefits',
             ...(fetchMiddlewares<RequestHandler>(MasterDataController)),
@@ -706,8 +701,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsMasterDataController_getRelationships: Record<string, TsoaRoute.ParameterSchema> = {
-                username: {"in":"query","name":"username","dataType":"string"},
-                password: {"in":"query","name":"password","dataType":"string"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
         app.get('/api/v1/master-data/relationships',
             ...(fetchMiddlewares<RequestHandler>(MasterDataController)),
@@ -766,9 +760,8 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsGeographicController_getDistricts: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 maTinh: {"in":"query","name":"maTinh","required":true,"dataType":"string"},
-                username: {"in":"query","name":"username","dataType":"string"},
-                password: {"in":"query","name":"password","dataType":"string"},
         };
         app.get('/api/v1/geographic/districts',
             ...(fetchMiddlewares<RequestHandler>(GeographicController)),
@@ -798,8 +791,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsEmployeesController_getEmployees: Record<string, TsoaRoute.ParameterSchema> = {
-                username: {"in":"query","name":"username","dataType":"string"},
-                password: {"in":"query","name":"password","dataType":"string"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 maNguoiLaoDong: {"in":"query","name":"maNguoiLaoDong","dataType":"string"},
                 ten: {"in":"query","name":"ten","dataType":"string"},
                 maPhongBan: {"in":"query","name":"maPhongBan","dataType":"string"},
@@ -836,9 +828,8 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsEmployeesController_getEmployeeById: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 employeeId: {"in":"path","name":"employeeId","required":true,"dataType":"string"},
-                username: {"in":"query","name":"username","dataType":"string"},
-                password: {"in":"query","name":"password","dataType":"string"},
         };
         app.get('/api/v1/employees/:employeeId',
             ...(fetchMiddlewares<RequestHandler>(EmployeesController)),
@@ -869,8 +860,6 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsEmployeesController_uploadEmployees: Record<string, TsoaRoute.ParameterSchema> = {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
-                username: {"in":"query","name":"username","dataType":"string"},
-                password: {"in":"query","name":"password","dataType":"string"},
         };
         app.post('/api/v1/employees/upload',
             ...(fetchMiddlewares<RequestHandler>(EmployeesController)),
@@ -900,10 +889,9 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsEmployeesController_updateEmployee: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 employeeId: {"in":"path","name":"employeeId","required":true,"dataType":"string"},
                 request: {"in":"body","name":"request","required":true,"ref":"EmployeeUpdateRequest"},
-                username: {"in":"query","name":"username","dataType":"string"},
-                password: {"in":"query","name":"password","dataType":"string"},
         };
         app.put('/api/v1/employees/:employeeId',
             ...(fetchMiddlewares<RequestHandler>(EmployeesController)),
@@ -933,11 +921,10 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsEmployeesController_syncEmployeeById: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 employeeId: {"in":"path","name":"employeeId","required":true,"dataType":"string"},
                 masoBhxh: {"in":"query","name":"masoBhxh","required":true,"dataType":"string"},
                 maCqbh: {"in":"query","name":"maCqbh","required":true,"dataType":"string"},
-                username: {"in":"query","name":"username","dataType":"string"},
-                password: {"in":"query","name":"password","dataType":"string"},
         };
         app.get('/api/v1/employees/:employeeId/sync',
             ...(fetchMiddlewares<RequestHandler>(EmployeesController)),
@@ -967,9 +954,8 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsDepartmentController_createDepartment: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 request: {"in":"body","name":"request","required":true,"ref":"DepartmentCreateRequest"},
-                username: {"in":"query","name":"username","dataType":"string"},
-                password: {"in":"query","name":"password","dataType":"string"},
         };
         app.post('/api/v1/departments',
             ...(fetchMiddlewares<RequestHandler>(DepartmentController)),
@@ -999,12 +985,11 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsDepartmentController_listDepartments: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
                 ma: {"in":"query","name":"ma","dataType":"string"},
                 ten: {"in":"query","name":"ten","dataType":"string"},
                 PageIndex: {"in":"query","name":"PageIndex","dataType":"double"},
                 PageSize: {"in":"query","name":"PageSize","dataType":"double"},
-                username: {"in":"query","name":"username","dataType":"string"},
-                password: {"in":"query","name":"password","dataType":"string"},
         };
         app.get('/api/v1/departments',
             ...(fetchMiddlewares<RequestHandler>(DepartmentController)),
@@ -1034,9 +1019,8 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsDepartmentController_getDepartmentById: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 id: {"in":"path","name":"id","required":true,"dataType":"double"},
-                username: {"in":"query","name":"username","dataType":"string"},
-                password: {"in":"query","name":"password","dataType":"string"},
         };
         app.get('/api/v1/departments/:id',
             ...(fetchMiddlewares<RequestHandler>(DepartmentController)),
@@ -1066,10 +1050,9 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsDepartmentController_updateDepartment: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 id: {"in":"path","name":"id","required":true,"dataType":"double"},
                 request: {"in":"body","name":"request","required":true,"ref":"DepartmentUpdateRequest"},
-                username: {"in":"query","name":"username","dataType":"string"},
-                password: {"in":"query","name":"password","dataType":"string"},
         };
         app.put('/api/v1/departments/:id',
             ...(fetchMiddlewares<RequestHandler>(DepartmentController)),
@@ -1099,9 +1082,8 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsDepartmentController_deleteDepartment: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 id: {"in":"path","name":"id","required":true,"dataType":"double"},
-                username: {"in":"query","name":"username","dataType":"string"},
-                password: {"in":"query","name":"password","dataType":"string"},
         };
         app.delete('/api/v1/departments/:id',
             ...(fetchMiddlewares<RequestHandler>(DepartmentController)),
