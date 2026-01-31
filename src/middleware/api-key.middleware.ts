@@ -2,12 +2,20 @@
  * API Key Authentication Middleware
  *
  * Validates X-API-Key header on all protected endpoints.
+ * Extracts BHXH credentials from X-Username and X-Password headers.
  * Use environment variable API_KEYS (comma-separated) to configure valid keys.
  */
 import { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 
 dotenv.config({ path: ".dev.vars" });
+
+/** Extended request type with BHXH credentials */
+export interface AuthenticatedRequest extends Request {
+  apiKey?: string;
+  bhxhUsername?: string;
+  bhxhPassword?: string;
+}
 
 /** API key configuration */
 interface ApiKeyConfig {
@@ -23,7 +31,7 @@ interface ApiKeyConfig {
 const DEFAULT_CONFIG: ApiKeyConfig = {
   keys: parseApiKeys(process.env.API_KEYS || ""),
   logUsage: true,
-  publicPaths: ["/", "/docs", "/swagger", "/swagger.json"],
+  publicPaths: ["/", "/health", "/docs", "/swagger", "/swagger.json"],
 };
 
 /**
@@ -79,8 +87,11 @@ export function createApiKeyMiddleware(config: ApiKeyConfig = DEFAULT_CONFIG) {
       console.log(`[API_KEY] ${keyPreview} → ${req.method} ${req.path}`);
     }
 
-    // Store API key in request for potential use
-    (req as any).apiKey = apiKey;
+    // Store API key and BHXH credentials in request for potential use
+    const authReq = req as AuthenticatedRequest;
+    authReq.apiKey = apiKey;
+    authReq.bhxhUsername = (req.headers["x-username"] as string) || undefined;
+    authReq.bhxhPassword = (req.headers["x-password"] as string) || undefined;
     next();
   };
 }

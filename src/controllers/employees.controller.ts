@@ -1,3 +1,15 @@
+/**
+ * Employees Controller
+ *
+ * REST endpoints for employee data operations using BHXH API.
+ *
+ * **Authentication:**
+ * - `X-API-Key`: Required for all endpoints
+ * - `X-Username`: BHXH username (optional if default credentials configured)
+ * - `X-Password`: BHXH password (optional if default credentials configured)
+ *
+ * Headers take priority over query parameters for backward compatibility.
+ */
 import {
   Controller,
   Get,
@@ -20,6 +32,7 @@ import {
   EmployeeUpdateRequest,
   EmployeeUpdateResponse,
   EmployeeSyncResponse,
+  EmployeeOfficialData,
 } from "../models/employee.model";
 import { getValidSession } from "../services/session.service";
 import { fetchEmployees, updateEmployee, syncEmployee, getEmployeeDetail } from "../services/bhxh.service";
@@ -31,23 +44,21 @@ import { fetchEmployees, updateEmployee, syncEmployee, getEmployeeDetail } from 
 export class EmployeesController extends Controller {
   /**
    * Get all employees for current unit
-   * @param username - BHXH username for per-request authentication
-   * @param password - BHXH password for per-request authentication
-   * @param maNguoiLaoDong - Filter by employee code
-   * @param ten - Filter by name
-   * @param maPhongBan - Filter by department
-   * @param maTinhTrang - Filter by status
-   * @param MaSoBhxh - Filter by BHXH number
-   * @param PageIndex - Page number (default 1)
-   * @param PageSize - Page size (default 100)
+   * @param req Express request with auth headers
+   * @param maNguoiLaoDong Filter by employee code
+   * @param ten Filter by name
+   * @param maPhongBan Filter by department
+   * @param maTinhTrang Filter by status
+   * @param MaSoBhxh Filter by BHXH number
+   * @param PageIndex Page number (default 1)
+   * @param PageSize Page size (default 100)
    * @returns Employee list with pagination info
    */
   @Get("/")
   @SuccessResponse(200, "OK")
   @Response<{ error: string; message: string }>(500, "Failed to fetch employees")
   public async getEmployees(
-    @Query() username?: string,
-    @Query() password?: string,
+    @Request() req: any,
     @Query() maNguoiLaoDong?: string,
     @Query() ten?: string,
     @Query() maPhongBan?: string,
@@ -59,7 +70,7 @@ export class EmployeesController extends Controller {
     const t0 = Date.now();
 
     try {
-      const session = await getValidSession(username, password);
+      const session = await getValidSession(req?.request);
       const params: EmployeesQueryParams = {
         maNguoiLaoDong,
         ten,
@@ -97,9 +108,8 @@ export class EmployeesController extends Controller {
   /**
    * Get employee by ID (Code 172)
    * Fetches employee detail from internal record by ID
+   * @param req Express request with auth headers
    * @param employeeId Employee ID (internal record ID)
-   * @param username BHXH username for authentication
-   * @param password BHXH password for authentication
    * @returns Employee detail or error message
    */
   @Get("{employeeId}")
@@ -107,12 +117,11 @@ export class EmployeesController extends Controller {
   @Response<{ error: string; message: string }>(404, "Employee not found")
   @Response<{ error: string; message: string }>(500, "Failed to fetch employee")
   public async getEmployeeById(
-    @Path() employeeId: string,
-    @Query() username?: string,
-    @Query() password?: string
+    @Request() req: any,
+    @Path() employeeId: string
   ): Promise<EmployeeDetailResponse> {
     try {
-      const session = await getValidSession(username, password);
+      const session = await getValidSession(req?.request);
       const id = parseInt(employeeId, 10);
 
       // Use Code 172 API directly
@@ -143,20 +152,16 @@ export class EmployeesController extends Controller {
    * Bulk upload employees from Excel file (Code 112)
    * Note: Requires multipart/form-data with Excel file
    * @param request Express request for file upload
-   * @param username BHXH username for authentication
-   * @param password BHXH password for authentication
    * @returns Upload result with processed count and any errors
    */
   @Post("upload")
   @SuccessResponse(200, "OK")
   @Response<{ error: string; message: string }>(500, "Failed to upload employees")
   public async uploadEmployees(
-    @Request() request: ExpressRequest,
-    @Query() username?: string,
-    @Query() password?: string
+    @Request() request: ExpressRequest
   ): Promise<EmployeeBulkUploadResponse> {
     try {
-      const session = await getValidSession(username, password);
+      const session = await getValidSession((request as any).request);
 
       // Check if file exists in request
       const files = request.files as Record<string, Express.Multer.File[]> | undefined;
@@ -222,10 +227,9 @@ export class EmployeesController extends Controller {
   /**
    * Update employee (Code 068)
    * Note: Requires full employee data structure - use GET /employees/{id} first to retrieve current data
+   * @param req Express request with auth headers
    * @param employeeId Employee ID
    * @param request Full employee update data
-   * @param username BHXH username for authentication
-   * @param password BHXH password for authentication
    * @returns Update result
    */
   @Put("{employeeId}")
@@ -233,13 +237,12 @@ export class EmployeesController extends Controller {
   @Response<{ error: string; message: string }>(404, "Employee not found")
   @Response<{ error: string; message: string }>(500, "Failed to update employee")
   public async updateEmployee(
+    @Request() req: any,
     @Path() employeeId: string,
-    @Body() request: EmployeeUpdateRequest,
-    @Query() username?: string,
-    @Query() password?: string
+    @Body() request: EmployeeUpdateRequest
   ): Promise<EmployeeUpdateResponse> {
     try {
-      const session = await getValidSession(username, password);
+      const session = await getValidSession(req?.request);
 
       // Ensure ID matches path parameter
       const employeeData = { ...request, id: parseInt(employeeId, 10) || request.id };
@@ -264,11 +267,10 @@ export class EmployeesController extends Controller {
   /**
    * Sync employee with central BHXH system (Code 156)
    * Fetches official employee data from central BHXH using Social Security Number
+   * @param req Express request with auth headers
    * @param employeeId Employee ID (for route consistency)
    * @param masoBhxh 10-digit Social Security Number
    * @param maCqbh Social Security Agency code
-   * @param username BHXH username for authentication
-   * @param password BHXH password for authentication
    * @returns Official employee data from central system
    */
   @Get("{employeeId}/sync")
@@ -276,14 +278,13 @@ export class EmployeesController extends Controller {
   @Response<{ error: string; message: string }>(400, "Invalid sync parameters")
   @Response<{ error: string; message: string }>(500, "Failed to sync employee")
   public async syncEmployeeById(
+    @Request() req: any,
     @Path() employeeId: string,
     @Query("masoBhxh") masoBhxh: string,
-    @Query("maCqbh") maCqbh: string,
-    @Query() username?: string,
-    @Query() password?: string
+    @Query("maCqbh") maCqbh: string
   ): Promise<EmployeeSyncResponse> {
     try {
-      const session = await getValidSession(username, password);
+      const session = await getValidSession(req?.request);
 
       const result = await syncEmployee(
         {

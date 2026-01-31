@@ -3,6 +3,13 @@
  *
  * Named endpoints for BHXH master data lookup resources.
  * Replaces generic /api/v1/lookup/{code} with discoverable endpoints.
+ *
+ * **Authentication:**
+ * - `X-API-Key`: Required for all endpoints
+ * - `X-Username`: BHXH username (optional if default credentials configured)
+ * - `X-Password`: BHXH password (optional if default credentials configured)
+ *
+ * Headers take priority over query parameters for backward compatibility.
  */
 import {
   Controller,
@@ -11,6 +18,7 @@ import {
   SuccessResponse,
   Response,
   Query,
+  Request,
 } from "tsoa";
 import {
   MasterDataResponse,
@@ -32,19 +40,17 @@ export class MasterDataController extends Controller {
   /**
    * Get paper types (Code 071)
    * Document types: Sổ hộ khẩu, CCCD/ĐDCN, etc.
-   * @param username - BHXH username for per-request authentication
-   * @param password - BHXH password for per-request authentication
+   * @param req Express request with auth headers
    * @returns List of paper types
    */
   @Get("/paper-types")
   @SuccessResponse(200, "OK")
   @Response<{ error: string; message: string }>(500, "Failed to fetch paper types")
   public async getPaperTypes(
-    @Query() username?: string,
-    @Query() password?: string
+    @Request() req: any
   ): Promise<MasterDataResponse<PaperType>> {
     try {
-      const session = await getValidSession(username, password);
+      const session = await getValidSession(req?.request);
       const data = (await lookup(session, "071")) as PaperType[];
       return { success: true, data };
     } catch (error) {
@@ -60,19 +66,17 @@ export class MasterDataController extends Controller {
   /**
    * Get countries (Code 072)
    * ISO country codes with Vietnamese names
-   * @param username - BHXH username for per-request authentication
-   * @param password - BHXH password for per-request authentication
+   * @param req Express request with auth headers
    * @returns List of countries
    */
   @Get("/countries")
   @SuccessResponse(200, "OK")
   @Response<{ error: string; message: string }>(500, "Failed to fetch countries")
   public async getCountries(
-    @Query() username?: string,
-    @Query() password?: string
+    @Request() req: any
   ): Promise<MasterDataResponse<Country>> {
     try {
-      const session = await getValidSession(username, password);
+      const session = await getValidSession(req?.request);
       const data = (await lookup(session, "072")) as Country[];
       return { success: true, data };
     } catch (error) {
@@ -88,19 +92,17 @@ export class MasterDataController extends Controller {
   /**
    * Get ethnicities (Code 073)
    * Vietnamese ethnic groups: Kinh, Tày, Thái, etc.
-   * @param username - BHXH username for per-request authentication
-   * @param password - BHXH password for per-request authentication
+   * @param req Express request with auth headers
    * @returns List of ethnicities
    */
   @Get("/ethnicities")
   @SuccessResponse(200, "OK")
   @Response<{ error: string; message: string }>(500, "Failed to fetch ethnicities")
   public async getEthnicities(
-    @Query() username?: string,
-    @Query() password?: string
+    @Request() req: any
   ): Promise<MasterDataResponse<Ethnicity>> {
     try {
-      const session = await getValidSession(username, password);
+      const session = await getValidSession(req?.request);
       const data = (await lookup(session, "073")) as Ethnicity[];
       return { success: true, data };
     } catch (error) {
@@ -116,19 +118,17 @@ export class MasterDataController extends Controller {
   /**
    * Get labor plan types (Code 086)
    * Employment change categories: Tăng lao động, Giảm lao động, etc.
-   * @param username - BHXH username for per-request authentication
-   * @param password - BHXH password for per-request authentication
+   * @param req Express request with auth headers
    * @returns List of labor plan types
    */
   @Get("/labor-plan-types")
   @SuccessResponse(200, "OK")
   @Response<{ error: string; message: string }>(500, "Failed to fetch labor plan types")
   public async getLaborPlanTypes(
-    @Query() username?: string,
-    @Query() password?: string
+    @Request() req: any
   ): Promise<MasterDataResponse<LaborPlanType>> {
     try {
-      const session = await getValidSession(username, password);
+      const session = await getValidSession(req?.request);
       const data = (await lookup(session, "086")) as LaborPlanType[];
       return { success: true, data };
     } catch (error) {
@@ -144,19 +144,17 @@ export class MasterDataController extends Controller {
   /**
    * Get benefits (Code 098)
    * Social insurance benefit types (Chế độ): Dưỡng sức, ốm đau, etc.
-   * @param username - BHXH username for per-request authentication
-   * @param password - BHXH password for per-request authentication
+   * @param req Express request with auth headers
    * @returns List of benefit types
    */
   @Get("/benefits")
   @SuccessResponse(200, "OK")
   @Response<{ error: string; message: string }>(500, "Failed to fetch benefits")
   public async getBenefits(
-    @Query() username?: string,
-    @Query() password?: string
+    @Request() req: any
   ): Promise<MasterDataResponse<Benefit>> {
     try {
-      const session = await getValidSession(username, password);
+      const session = await getValidSession(req?.request);
       const data = (await lookup(session, "098")) as Benefit[];
       return { success: true, data };
     } catch (error) {
@@ -172,19 +170,17 @@ export class MasterDataController extends Controller {
   /**
    * Get relationships (Code 099)
    * Family/household relationships: Chủ hộ, Vợ, Chồng, Con, etc.
-   * @param username - BHXH username for per-request authentication
-   * @param password - BHXH password for per-request authentication
+   * @param req Express request with auth headers
    * @returns List of relationships
    */
   @Get("/relationships")
   @SuccessResponse(200, "OK")
   @Response<{ error: string; message: string }>(500, "Failed to fetch relationships")
   public async getRelationships(
-    @Query() username?: string,
-    @Query() password?: string
+    @Request() req: any
   ): Promise<MasterDataResponse<Relationship>> {
     try {
-      const session = await getValidSession(username, password);
+      const session = await getValidSession(req?.request);
       const data = (await lookup(session, "099")) as Relationship[];
       return { success: true, data };
     } catch (error) {

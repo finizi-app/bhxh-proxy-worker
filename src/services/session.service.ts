@@ -2,6 +2,7 @@
  * Session service for managing BHXH authentication state
  */
 import dotenv from "dotenv";
+import type { Request } from "express";
 import CryptoJS from "crypto-js";
 import { Session, DonVi, BhxhCredentials } from "../models/session.model";
 import {
@@ -12,6 +13,7 @@ import {
   encryptXClient,
 } from "./bhxh.service";
 import { createAxios } from "./proxy.service";
+import type { AuthenticatedRequest } from "../middleware/api-key.middleware";
 
 dotenv.config({ path: ".dev.vars" });
 
@@ -29,16 +31,32 @@ const sessionCache = new Map<string, Session>();
 
 /**
  * Get or refresh session token
- * @param username - Optional BHXH username for per-request auth
- * @param password - Optional BHXH password for per-request auth
+ * @param req - Express Request object (optional, for header-based auth)
+ * @param username - Optional BHXH username for per-request auth (legacy)
+ * @param password - Optional BHXH password for per-request auth (legacy)
  * @returns Valid Session object
  */
 export async function getValidSession(
+  req?: Request,
   username?: string,
   password?: string
 ): Promise<Session> {
+  // Extract credentials from headers (if request provided) or use parameters
+  let extractedUsername: string | undefined;
+  let extractedPassword: string | undefined;
+
+  if (req) {
+    const authReq = req as AuthenticatedRequest;
+    extractedUsername = authReq.bhxhUsername;
+    extractedPassword = authReq.bhxhPassword;
+  }
+
+  // Fall back to query/body parameters if not in headers
+  const finalUsername = extractedUsername || username;
+  const finalPassword = extractedPassword || password;
+
   // Create cache key from credentials
-  const cacheKey = createCacheKey(username, password);
+  const cacheKey = createCacheKey(finalUsername, finalPassword);
 
   // Check cache
   const cached = sessionCache.get(cacheKey);
@@ -48,7 +66,7 @@ export async function getValidSession(
   }
 
   // Perform login
-  return performLogin(username, password);
+  return performLogin(finalUsername, finalPassword);
 }
 
 /**

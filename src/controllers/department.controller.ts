@@ -2,6 +2,13 @@
  * Department Controller
  *
  * RESTful CRUD endpoints for Department management using BHXH API codes 077, 079, 080.
+ *
+ * **Authentication:**
+ * - `X-API-Key`: Required for all endpoints
+ * - `X-Username`: BHXH username (optional if default credentials configured)
+ * - `X-Password`: BHXH password (optional if default credentials configured)
+ *
+ * Headers take priority over query parameters for backward compatibility.
  */
 import {
   Controller,
@@ -15,6 +22,7 @@ import {
   Query,
   SuccessResponse,
   Response,
+  Request,
 } from "tsoa";
 import {
   createDepartment as createDept,
@@ -51,21 +59,19 @@ interface PaginatedResponse<T> {
 export class DepartmentController extends Controller {
   /**
    * Create a new department (Code 077)
+   * @param req Express request with auth headers
    * @param request Department creation data
-   * @param username BHXH username for authentication
-   * @param password BHXH password for authentication
    * @returns Created department
    */
   @Post()
   @SuccessResponse(201, "Created")
   @Response<{ error: string; message: string }>(500, "Failed to create department")
   public async createDepartment(
-    @Body() request: DepartmentCreateRequest,
-    @Query() username?: string,
-    @Query() password?: string
+    @Request() req: any,
+    @Body() request: DepartmentCreateRequest
   ): Promise<ApiResponse<Department>> {
     try {
-      const session: Session = await getValidSession(username, password);
+      const session: Session = await getValidSession(req?.request);
       const data = await createDept(request, session);
       this.setStatus(201);
       return { success: true, data };
@@ -81,27 +87,25 @@ export class DepartmentController extends Controller {
 
   /**
    * List departments with optional filters (Code 079)
+   * @param request Express request with auth headers
    * @param ma Filter by department code
    * @param ten Filter by department name
    * @param PageIndex Page number (default 1)
    * @param PageSize Page size (default 50)
-   * @param username BHXH username for authentication
-   * @param password BHXH password for authentication
    * @returns Paginated department list
    */
   @Get()
   @SuccessResponse(200, "OK")
   @Response<{ error: string; message: string }>(500, "Failed to fetch departments")
   public async listDepartments(
+    @Request() request: any,
     @Query("ma") ma?: string,
     @Query("ten") ten?: string,
     @Query("PageIndex") PageIndex?: number,
-    @Query("PageSize") PageSize?: number,
-    @Query() username?: string,
-    @Query() password?: string
+    @Query("PageSize") PageSize?: number
   ): Promise<PaginatedResponse<Department>> {
     try {
-      const session: Session = await getValidSession(username, password);
+      const session: Session = await getValidSession(request?.request);
       const query: DepartmentListQueryParams = {
         ma,
         ten,
@@ -127,9 +131,8 @@ export class DepartmentController extends Controller {
   /**
    * Get department by ID (via list + filter)
    * Note: BHXH API doesn't have direct get-by-id, so we filter the list
+   * @param req Express request with auth headers
    * @param id Department ID
-   * @param username BHXH username for authentication
-   * @param password BHXH password for authentication
    * @returns Department data or 404
    */
   @Get("{id}")
@@ -137,12 +140,11 @@ export class DepartmentController extends Controller {
   @Response<{ error: string; message: string }>(404, "Department not found")
   @Response<{ error: string; message: string }>(500, "Failed to fetch department")
   public async getDepartmentById(
-    @Path() id: number,
-    @Query() username?: string,
-    @Query() password?: string
+    @Request() req: any,
+    @Path() id: number
   ): Promise<ApiResponse<Department | null>> {
     try {
-      const session: Session = await getValidSession(username, password);
+      const session: Session = await getValidSession(req?.request);
       const { data } = await listDepts({}, session);
       const dept = data.find((d) => d.id === id);
 
@@ -169,10 +171,9 @@ export class DepartmentController extends Controller {
 
   /**
    * Update existing department (Code 077)
+   * @param req Express request with auth headers
    * @param id Department ID to update
    * @param request Department update data
-   * @param username BHXH username for authentication
-   * @param password BHXH password for authentication
    * @returns Updated department
    */
   @Put("{id}")
@@ -180,13 +181,12 @@ export class DepartmentController extends Controller {
   @Response<{ error: string; message: string }>(404, "Department not found")
   @Response<{ error: string; message: string }>(500, "Failed to update department")
   public async updateDepartment(
+    @Request() req: any,
     @Path() id: number,
-    @Body() request: DepartmentUpdateRequest,
-    @Query() username?: string,
-    @Query() password?: string
+    @Body() request: DepartmentUpdateRequest
   ): Promise<ApiResponse<Department>> {
     try {
-      const session: Session = await getValidSession(username, password);
+      const session: Session = await getValidSession(req?.request);
       const data = await updateDept(id, request, session);
       return { success: true, data };
     } catch (error) {
@@ -201,21 +201,19 @@ export class DepartmentController extends Controller {
 
   /**
    * Delete department by ID (Code 080)
+   * @param req Express request with auth headers
    * @param id Department ID to delete
-   * @param username BHXH username for authentication
-   * @param password BHXH password for authentication
    * @returns Success message
    */
   @Delete("{id}")
   @SuccessResponse(200, "OK")
   @Response<{ error: string; message: string }>(500, "Failed to delete department")
   public async deleteDepartment(
-    @Path() id: number,
-    @Query() username?: string,
-    @Query() password?: string
+    @Request() req: any,
+    @Path() id: number
   ): Promise<{ success: boolean; message: string }> {
     try {
-      const session: Session = await getValidSession(username, password);
+      const session: Session = await getValidSession(req?.request);
       await deleteDept(id, session);
       return { success: true, message: "Department deleted successfully" };
     } catch (error) {
