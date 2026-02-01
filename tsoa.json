@@ -4,8 +4,8 @@
   "controllerPathGlobs": ["src/controllers/*controller.ts"],
   "spec": {
     "outputDirectory": "./src/generated",
-    "specFileBaseName": "swagger",
-    "version": 3,
+    "specVersion": 3,
+    "specFileBaseName": "openapi",
     "securityDefinitions": {
       "api_key": {
         "type": "apiKey",
@@ -18,12 +18,5 @@
   "routes": {
     "routesDir": "./src/generated",
     "routesFileName": "routes.ts"
-  },
-  "specMappers": {
-    "RequestMapping": {
-      "paths": {
-        "$ref": "#/definitions/RequestMapping"
-      }
-    }
   }
 }

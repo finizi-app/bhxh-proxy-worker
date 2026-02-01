@@ -95,3 +95,29 @@ export type {
   D02TSFormSection,
   D02TSEmployeeMinimal,
 } from "./d02-ts-nguoi-lao-dong.model";
+
+// Payment types (Codes 137, 503, 504, 514, payment reference)
+export type {
+  C12LineItem,
+  C12ReportRawResponse,
+  C12SectionA,
+  C12SectionB,
+  C12SectionC,
+  C12Payment,
+  C12SectionD,
+  C12SectionDau,
+  C12ReportParsed,
+  C12ReportResponse,
+  C12ReportQueryParams,
+  BhxhBankAccount,
+  BankAccountsResponse,
+  PaymentTransaction,
+  PaymentHistoryRawResponse,
+  PaymentHistoryQueryParams,
+  PaymentHistoryResponse,
+  PaymentUnitInfo,
+  PaymentUnitInfoResponse,
+  PaymentReferenceComponents,
+  PaymentReferenceParams,
+  PaymentReferenceResponse,
+} from "./payment/index";

@@ -6,6 +6,8 @@ import {  fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { SessionController } from './../controllers/session.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { PaymentsController } from './../controllers/payments.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { MasterDataController } from './../controllers/master-data.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { HealthController } from './../controllers/health.controller';
@@ -51,6 +53,231 @@ const models: TsoaRoute.Models = {
             "force": {"dataType":"boolean"},
             "username": {"dataType":"string"},
             "password": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "C12LineItem": {
+        "dataType": "refObject",
+        "properties": {
+            "tenDonVi": {"dataType":"string","required":true},
+            "maDonVi": {"dataType":"string","required":true},
+            "diaChi": {"dataType":"string","required":true},
+            "stt": {"dataType":"string","required":true},
+            "noiDung": {"dataType":"string","required":true},
+            "bhxh": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"double"}],"required":true},
+            "bhyt": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"double"}],"required":true},
+            "bhtn": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"double"}],"required":true},
+            "bhtnld": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"double"}],"required":true},
+            "cong": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"double"}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "C12ReportRawResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "maCqBhxh": {"dataType":"string","required":true},
+            "tenCqBhxh": {"dataType":"string","required":true},
+            "c12s": {"dataType":"array","array":{"dataType":"refObject","ref":"C12LineItem"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "C12SectionA": {
+        "dataType": "refObject",
+        "properties": {
+            "stt": {"dataType":"string","required":true},
+            "noiDung": {"dataType":"string","required":true},
+            "total": {"dataType":"double","required":true},
+            "employeeCount": {"dataType":"double","required":true},
+            "amountDue": {"dataType":"double","required":true},
+            "overpayment": {"dataType":"double","required":true},
+            "underpayment": {"dataType":"double","required":true},
+            "interest": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "C12SectionB": {
+        "dataType": "refObject",
+        "properties": {
+            "stt": {"dataType":"string","required":true},
+            "noiDung": {"dataType":"string","required":true},
+            "total": {"dataType":"double","required":true},
+            "employeesAdded": {"dataType":"double","required":true},
+            "employeesRemoved": {"dataType":"double","required":true},
+            "salaryFundTotal": {"dataType":"double","required":true},
+            "salaryFundIncrease": {"dataType":"double","required":true},
+            "salaryFundDecrease": {"dataType":"double","required":true},
+            "amountDue": {"dataType":"double","required":true},
+            "amountDueIncrease": {"dataType":"double","required":true},
+            "amountDueDecrease": {"dataType":"double","required":true},
+            "adjustment": {"dataType":"double","required":true},
+            "priorYearAdjustment": {"dataType":"double","required":true},
+            "interestPrincipal": {"dataType":"double","required":true},
+            "interestRate": {"dataType":"double","required":true},
+            "interestTotal": {"dataType":"double","required":true},
+            "mandatoryReserve": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "C12Payment": {
+        "dataType": "refObject",
+        "properties": {
+            "reference": {"dataType":"string","required":true},
+            "date": {"dataType":"string","required":true},
+            "amount": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "C12SectionC": {
+        "dataType": "refObject",
+        "properties": {
+            "stt": {"dataType":"string","required":true},
+            "noiDung": {"dataType":"string","required":true},
+            "total": {"dataType":"double","required":true},
+            "payments": {"dataType":"array","array":{"dataType":"refObject","ref":"C12Payment"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "C12SectionD": {
+        "dataType": "refObject",
+        "properties": {
+            "stt": {"dataType":"string","required":true},
+            "noiDung": {"dataType":"string","required":true},
+            "allocatedToObligations": {"dataType":"double","required":true},
+            "allocatedToInterest": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "C12SectionDau": {
+        "dataType": "refObject",
+        "properties": {
+            "stt": {"dataType":"string","required":true},
+            "noiDung": {"dataType":"string","required":true},
+            "total": {"dataType":"double","required":true},
+            "employeeCount": {"dataType":"double","required":true},
+            "amountDue": {"dataType":"double","required":true},
+            "overpayment": {"dataType":"double","required":true},
+            "underpayment": {"dataType":"double","required":true},
+            "interestOnUnderpayment": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "C12ReportParsed": {
+        "dataType": "refObject",
+        "properties": {
+            "agencyCode": {"dataType":"string","required":true},
+            "agencyName": {"dataType":"string","required":true},
+            "sectionA": {"dataType":"union","subSchemas":[{"ref":"C12SectionA"},{"dataType":"enum","enums":[null]}],"required":true},
+            "sectionB": {"dataType":"union","subSchemas":[{"ref":"C12SectionB"},{"dataType":"enum","enums":[null]}],"required":true},
+            "sectionC": {"dataType":"union","subSchemas":[{"ref":"C12SectionC"},{"dataType":"enum","enums":[null]}],"required":true},
+            "sectionD": {"dataType":"union","subSchemas":[{"ref":"C12SectionD"},{"dataType":"enum","enums":[null]}],"required":true},
+            "sectionDau": {"dataType":"union","subSchemas":[{"ref":"C12SectionDau"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "C12ReportResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "data": {"dataType":"nestedObjectLiteral","nestedProperties":{"parsed":{"ref":"C12ReportParsed","required":true},"raw":{"ref":"C12ReportRawResponse","required":true}},"required":true},
+            "meta": {"dataType":"nestedObjectLiteral","nestedProperties":{"unitCode":{"dataType":"string","required":true},"year":{"dataType":"double"},"month":{"dataType":"double","required":true}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "error": {"dataType":"string","required":true},
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PaymentTransaction": {
+        "dataType": "refObject",
+        "properties": {
+            "soUnc": {"dataType":"string"},
+            "ngayNop": {"dataType":"string"},
+            "soTien": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"double"}]},
+        },
+        "additionalProperties": {"dataType":"any"},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PaymentHistoryResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "data": {"dataType":"array","array":{"dataType":"refObject","ref":"PaymentTransaction"},"required":true},
+            "meta": {"dataType":"nestedObjectLiteral","nestedProperties":{"pageSize":{"dataType":"double","required":true},"pageIndex":{"dataType":"double","required":true},"count":{"dataType":"double","required":true},"total":{"dataType":"double","required":true}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BhxhBankAccount": {
+        "dataType": "refObject",
+        "properties": {
+            "tkThuHuong": {"dataType":"string","required":true},
+            "maNHThuHuong": {"dataType":"string","required":true},
+            "tenVietTatNHThuHuong": {"dataType":"string","required":true},
+            "tenNHThuHuong": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BankAccountsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "data": {"dataType":"array","array":{"dataType":"refObject","ref":"BhxhBankAccount"},"required":true},
+            "meta": {"dataType":"nestedObjectLiteral","nestedProperties":{"count":{"dataType":"double","required":true},"agencyCode":{"dataType":"string","required":true}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PaymentUnitInfo": {
+        "dataType": "refObject",
+        "properties": {
+        },
+        "additionalProperties": {"dataType":"any"},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PaymentUnitInfoResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "data": {"ref":"PaymentUnitInfo","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PaymentReferenceComponents": {
+        "dataType": "refObject",
+        "properties": {
+            "prefix": {"dataType":"string","required":true},
+            "type": {"dataType":"string","required":true},
+            "reserved": {"dataType":"string","required":true},
+            "unitCode": {"dataType":"string","required":true},
+            "agencyCode": {"dataType":"string","required":true},
+            "description": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PaymentReferenceResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "data": {"dataType":"nestedObjectLiteral","nestedProperties":{"components":{"ref":"PaymentReferenceComponents","required":true},"reference":{"dataType":"string","required":true}},"required":true},
         },
         "additionalProperties": false,
     },
@@ -799,6 +1026,175 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'refresh',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsPaymentsController_getC12Report: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                username: {"in":"query","name":"username","dataType":"string"},
+                password: {"in":"query","name":"password","dataType":"string"},
+                thang: {"in":"query","name":"thang","dataType":"double"},
+                nam: {"in":"query","name":"nam","dataType":"double"},
+        };
+        app.get('/api/v1/payments/c12-report',
+            ...(fetchMiddlewares<RequestHandler>(PaymentsController)),
+            ...(fetchMiddlewares<RequestHandler>(PaymentsController.prototype.getC12Report)),
+
+            async function PaymentsController_getC12Report(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsPaymentsController_getC12Report, request, response });
+
+                const controller = new PaymentsController();
+
+              await templateService.apiHandler({
+                methodName: 'getC12Report',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsPaymentsController_getPaymentHistory: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                username: {"in":"query","name":"username","dataType":"string"},
+                password: {"in":"query","name":"password","dataType":"string"},
+                PageIndex: {"in":"query","name":"PageIndex","dataType":"double"},
+                PageSize: {"in":"query","name":"PageSize","dataType":"double"},
+                Filter: {"in":"query","name":"Filter","dataType":"string"},
+        };
+        app.get('/api/v1/payments/history',
+            ...(fetchMiddlewares<RequestHandler>(PaymentsController)),
+            ...(fetchMiddlewares<RequestHandler>(PaymentsController.prototype.getPaymentHistory)),
+
+            async function PaymentsController_getPaymentHistory(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsPaymentsController_getPaymentHistory, request, response });
+
+                const controller = new PaymentsController();
+
+              await templateService.apiHandler({
+                methodName: 'getPaymentHistory',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsPaymentsController_getBankAccounts: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                username: {"in":"query","name":"username","dataType":"string"},
+                password: {"in":"query","name":"password","dataType":"string"},
+        };
+        app.get('/api/v1/payments/bank-accounts',
+            ...(fetchMiddlewares<RequestHandler>(PaymentsController)),
+            ...(fetchMiddlewares<RequestHandler>(PaymentsController.prototype.getBankAccounts)),
+
+            async function PaymentsController_getBankAccounts(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsPaymentsController_getBankAccounts, request, response });
+
+                const controller = new PaymentsController();
+
+              await templateService.apiHandler({
+                methodName: 'getBankAccounts',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsPaymentsController_getPaymentUnitInfo: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                username: {"in":"query","name":"username","dataType":"string"},
+                password: {"in":"query","name":"password","dataType":"string"},
+        };
+        app.get('/api/v1/payments/unit-info',
+            ...(fetchMiddlewares<RequestHandler>(PaymentsController)),
+            ...(fetchMiddlewares<RequestHandler>(PaymentsController.prototype.getPaymentUnitInfo)),
+
+            async function PaymentsController_getPaymentUnitInfo(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsPaymentsController_getPaymentUnitInfo, request, response });
+
+                const controller = new PaymentsController();
+
+              await templateService.apiHandler({
+                methodName: 'getPaymentUnitInfo',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsPaymentsController_getPaymentReference: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                username: {"in":"query","name":"username","dataType":"string"},
+                password: {"in":"query","name":"password","dataType":"string"},
+                type: {"in":"query","name":"type","dataType":"string"},
+                description: {"in":"query","name":"description","dataType":"string"},
+                unitCode: {"in":"query","name":"unitCode","dataType":"string"},
+                agencyCode: {"in":"query","name":"agencyCode","dataType":"string"},
+        };
+        app.get('/api/v1/payments/reference',
+            ...(fetchMiddlewares<RequestHandler>(PaymentsController)),
+            ...(fetchMiddlewares<RequestHandler>(PaymentsController.prototype.getPaymentReference)),
+
+            async function PaymentsController_getPaymentReference(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsPaymentsController_getPaymentReference, request, response });
+
+                const controller = new PaymentsController();
+
+              await templateService.apiHandler({
+                methodName: 'getPaymentReference',
                 controller,
                 response,
                 next,

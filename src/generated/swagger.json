@@ -69,6 +69,706 @@
 			"type": "object",
 			"additionalProperties": false
 		},
+		"C12LineItem": {
+			"description": "Raw C12 line item from BHXH API Code 137\nRepresents a single line in the financial statement",
+			"properties": {
+				"tenDonVi": {
+					"type": "string",
+					"description": "Unit name"
+				},
+				"maDonVi": {
+					"type": "string",
+					"description": "Unit code"
+				},
+				"diaChi": {
+					"type": "string",
+					"description": "Unit address"
+				},
+				"stt": {
+					"type": "string",
+					"description": "Section/Line code (e.g., \"A\", \"B.1\", \"D.1\", \"D.1.1\")"
+				},
+				"noiDung": {
+					"type": "string",
+					"description": "Line item description"
+				},
+				"bhxh": {
+					"type": "string",
+					"description": "Social Insurance amount"
+				},
+				"bhyt": {
+					"type": "string",
+					"description": "Health Insurance amount"
+				},
+				"bhtn": {
+					"type": "string",
+					"description": "Unemployment Insurance amount"
+				},
+				"bhtnld": {
+					"type": "string",
+					"description": "Labor Accident Insurance amount"
+				},
+				"cong": {
+					"type": "string",
+					"description": "Total amount (sum of all insurance types)"
+				}
+			},
+			"required": [
+				"tenDonVi",
+				"maDonVi",
+				"diaChi",
+				"stt",
+				"noiDung",
+				"bhxh",
+				"bhyt",
+				"bhtn",
+				"bhtnld",
+				"cong"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"C12ReportRawResponse": {
+			"description": "Raw C12 report response from BHXH API",
+			"properties": {
+				"maCqBhxh": {
+					"type": "string",
+					"description": "BHXH agency code"
+				},
+				"tenCqBhxh": {
+					"type": "string",
+					"description": "BHXH agency name"
+				},
+				"c12s": {
+					"items": {
+						"$ref": "#/definitions/C12LineItem"
+					},
+					"type": "array",
+					"description": "Array of line items (complete financial statement)"
+				}
+			},
+			"required": [
+				"maCqBhxh",
+				"tenCqBhxh",
+				"c12s"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"Partial_C12SectionA_": {
+			"properties": {
+				"stt": {
+					"type": "string",
+					"description": "Section code"
+				},
+				"noiDung": {
+					"type": "string",
+					"description": "Section description"
+				},
+				"total": {
+					"type": "number",
+					"format": "double",
+					"description": "Total carried over"
+				},
+				"employeeCount": {
+					"type": "number",
+					"format": "double",
+					"description": "Number of employees"
+				},
+				"amountDue": {
+					"type": "number",
+					"format": "double",
+					"description": "Amount due"
+				},
+				"overpayment": {
+					"type": "number",
+					"format": "double",
+					"description": "Overpayment amount"
+				},
+				"underpayment": {
+					"type": "number",
+					"format": "double",
+					"description": "Underpayment amount"
+				},
+				"interest": {
+					"type": "number",
+					"format": "double",
+					"description": "Interest on underpayment"
+				}
+			},
+			"type": "object",
+			"description": "Make all properties in T optional"
+		},
+		"Partial_C12SectionB_": {
+			"properties": {
+				"stt": {
+					"type": "string",
+					"description": "Section code"
+				},
+				"noiDung": {
+					"type": "string",
+					"description": "Section description"
+				},
+				"total": {
+					"type": "number",
+					"format": "double",
+					"description": "Total current period obligation"
+				},
+				"employeesAdded": {
+					"type": "number",
+					"format": "double",
+					"description": "Employees added"
+				},
+				"employeesRemoved": {
+					"type": "number",
+					"format": "double",
+					"description": "Employees removed"
+				},
+				"salaryFundTotal": {
+					"type": "number",
+					"format": "double",
+					"description": "Total salary fund"
+				},
+				"salaryFundIncrease": {
+					"type": "number",
+					"format": "double",
+					"description": "Salary increase"
+				},
+				"salaryFundDecrease": {
+					"type": "number",
+					"format": "double",
+					"description": "Salary decrease"
+				},
+				"amountDue": {
+					"type": "number",
+					"format": "double",
+					"description": "Amount due for current period"
+				},
+				"amountDueIncrease": {
+					"type": "number",
+					"format": "double",
+					"description": "Increase in obligation"
+				},
+				"amountDueDecrease": {
+					"type": "number",
+					"format": "double",
+					"description": "Decrease in obligation"
+				},
+				"adjustment": {
+					"type": "number",
+					"format": "double",
+					"description": "Net adjustment"
+				},
+				"priorYearAdjustment": {
+					"type": "number",
+					"format": "double",
+					"description": "Prior year adjustment"
+				},
+				"interestPrincipal": {
+					"type": "number",
+					"format": "double",
+					"description": "Principal for interest calculation"
+				},
+				"interestRate": {
+					"type": "number",
+					"format": "double",
+					"description": "Interest rate (as decimal, e.g., 0.0644 = 0.644%)"
+				},
+				"interestTotal": {
+					"type": "number",
+					"format": "double",
+					"description": "Total interest"
+				},
+				"mandatoryReserve": {
+					"type": "number",
+					"format": "double",
+					"description": "2% mandatory reserve"
+				}
+			},
+			"type": "object",
+			"description": "Make all properties in T optional"
+		},
+		"C12Payment": {
+			"description": "Individual payment record in Section C\nRepresents a single payment transaction",
+			"properties": {
+				"reference": {
+					"type": "string",
+					"description": "Payment reference number (UNC)"
+				},
+				"date": {
+					"type": "string",
+					"description": "Payment date (DD/MM/YYYY format)"
+				},
+				"amount": {
+					"type": "number",
+					"format": "double",
+					"description": "Payment amount"
+				}
+			},
+			"required": [
+				"reference",
+				"date",
+				"amount"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"Partial_C12SectionC_": {
+			"properties": {
+				"stt": {
+					"type": "string",
+					"description": "Section code"
+				},
+				"noiDung": {
+					"type": "string",
+					"description": "Section description"
+				},
+				"total": {
+					"type": "number",
+					"format": "double",
+					"description": "Total payments received"
+				},
+				"payments": {
+					"items": {
+						"$ref": "#/definitions/C12Payment"
+					},
+					"type": "array",
+					"description": "Individual payment transactions"
+				}
+			},
+			"type": "object",
+			"description": "Make all properties in T optional"
+		},
+		"Partial_C12SectionD_": {
+			"properties": {
+				"stt": {
+					"type": "string",
+					"description": "Section code"
+				},
+				"noiDung": {
+					"type": "string",
+					"description": "Section description"
+				},
+				"allocatedToObligations": {
+					"type": "number",
+					"format": "double",
+					"description": "Amount allocated to obligations"
+				},
+				"allocatedToInterest": {
+					"type": "number",
+					"format": "double",
+					"description": "Amount allocated to interest"
+				}
+			},
+			"type": "object",
+			"description": "Make all properties in T optional"
+		},
+		"Partial_C12SectionDau_": {
+			"properties": {
+				"stt": {
+					"type": "string",
+					"description": "Section code"
+				},
+				"noiDung": {
+					"type": "string",
+					"description": "Section description"
+				},
+				"total": {
+					"type": "number",
+					"format": "double",
+					"description": "Total carried forward"
+				},
+				"employeeCount": {
+					"type": "number",
+					"format": "double",
+					"description": "Employee count carried forward"
+				},
+				"amountDue": {
+					"type": "number",
+					"format": "double",
+					"description": "Amount due carried forward"
+				},
+				"overpayment": {
+					"type": "number",
+					"format": "double",
+					"description": "Overpayment carried forward"
+				},
+				"underpayment": {
+					"type": "number",
+					"format": "double",
+					"description": "Underpayment carried forward"
+				},
+				"interestOnUnderpayment": {
+					"type": "number",
+					"format": "double",
+					"description": "Interest on underpayment carried forward"
+				}
+			},
+			"type": "object",
+			"description": "Make all properties in T optional"
+		},
+		"C12ReportParsed": {
+			"description": "Fully parsed C12 report with structured sections",
+			"properties": {
+				"agencyCode": {
+					"type": "string",
+					"description": "BHXH agency code"
+				},
+				"agencyName": {
+					"type": "string",
+					"description": "BHXH agency name"
+				},
+				"sectionA": {
+					"$ref": "#/definitions/Partial_C12SectionA_",
+					"description": "Section A: Previous Period Balance (empty if not found)"
+				},
+				"sectionB": {
+					"$ref": "#/definitions/Partial_C12SectionB_",
+					"description": "Section B: Current Period Activity (empty if not found)"
+				},
+				"sectionC": {
+					"$ref": "#/definitions/Partial_C12SectionC_",
+					"description": "Section C: Payments Made (empty if not found)"
+				},
+				"sectionD": {
+					"$ref": "#/definitions/Partial_C12SectionD_",
+					"description": "Section D: Payment Allocation (empty if not found)"
+				},
+				"sectionDau": {
+					"$ref": "#/definitions/Partial_C12SectionDau_",
+					"description": "Section Đ: Carried Forward (empty if not found)"
+				}
+			},
+			"required": [
+				"agencyCode",
+				"agencyName",
+				"sectionA",
+				"sectionB",
+				"sectionC",
+				"sectionD",
+				"sectionDau"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"C12ReportResponse": {
+			"description": "Combined C12 report response with both raw and parsed data",
+			"properties": {
+				"success": {
+					"type": "boolean",
+					"description": "Success flag"
+				},
+				"data": {
+					"properties": {
+						"parsed": {
+							"$ref": "#/definitions/C12ReportParsed",
+							"description": "Parsed structured sections"
+						},
+						"raw": {
+							"$ref": "#/definitions/C12ReportRawResponse",
+							"description": "Raw response from BHXH API"
+						}
+					},
+					"required": [
+						"parsed",
+						"raw"
+					],
+					"type": "object",
+					"description": "Report data"
+				},
+				"meta": {
+					"properties": {
+						"unitCode": {
+							"type": "string",
+							"description": "Unit code"
+						},
+						"year": {
+							"type": "number",
+							"format": "double",
+							"description": "Report year (optional)"
+						},
+						"month": {
+							"type": "number",
+							"format": "double",
+							"description": "Report month (1-12)"
+						}
+					},
+					"required": [
+						"unitCode",
+						"month"
+					],
+					"type": "object",
+					"description": "Response metadata"
+				}
+			},
+			"required": [
+				"success",
+				"data"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"ErrorResponse": {
+			"properties": {
+				"error": {
+					"type": "string"
+				},
+				"message": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"error",
+				"message"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"PaymentTransaction": {
+			"description": "Payment transaction record from BHXH Code 514\nFields TBD - will be refined after receiving actual payment data",
+			"properties": {
+				"soUnc": {
+					"type": "string",
+					"description": "Payment reference number (UNC)"
+				},
+				"ngayNop": {
+					"type": "string",
+					"description": "Payment date"
+				},
+				"soTien": {
+					"type": "string",
+					"description": "Payment amount"
+				}
+			},
+			"type": "object",
+			"additionalProperties": {
+				"additionalProperties": true
+			}
+		},
+		"PaymentHistoryResponse": {
+			"description": "Payment history API response",
+			"properties": {
+				"success": {
+					"type": "boolean",
+					"description": "Success flag"
+				},
+				"data": {
+					"items": {
+						"$ref": "#/definitions/PaymentTransaction"
+					},
+					"type": "array",
+					"description": "Array of payment transactions"
+				},
+				"meta": {
+					"properties": {
+						"pageSize": {
+							"type": "number",
+							"format": "double",
+							"description": "Page size"
+						},
+						"pageIndex": {
+							"type": "number",
+							"format": "double",
+							"description": "Current page index"
+						},
+						"count": {
+							"type": "number",
+							"format": "double",
+							"description": "Number of records in current page"
+						},
+						"total": {
+							"type": "number",
+							"format": "double",
+							"description": "Total number of records"
+						}
+					},
+					"required": [
+						"pageSize",
+						"pageIndex",
+						"count",
+						"total"
+					],
+					"type": "object",
+					"description": "Response metadata"
+				}
+			},
+			"required": [
+				"success",
+				"data",
+				"meta"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"BhxhBankAccount": {
+			"description": "BHXH beneficiary bank account information\nRepresents a single bank account where payments can be sent",
+			"properties": {
+				"tkThuHuong": {
+					"type": "string",
+					"description": "Beneficiary account number"
+				},
+				"maNHThuHuong": {
+					"type": "string",
+					"description": "Bank code"
+				},
+				"tenVietTatNHThuHuong": {
+					"type": "string",
+					"description": "Bank short name (e.g., \"BIDV\")"
+				},
+				"tenNHThuHuong": {
+					"type": "string",
+					"description": "Bank full name (e.g., \"Ngân hàng TMCP Đầu tư và Phát triển Việt nam\")"
+				}
+			},
+			"required": [
+				"tkThuHuong",
+				"maNHThuHuong",
+				"tenVietTatNHThuHuong",
+				"tenNHThuHuong"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"BankAccountsResponse": {
+			"description": "Bank accounts list response",
+			"properties": {
+				"success": {
+					"type": "boolean",
+					"description": "Success flag"
+				},
+				"data": {
+					"items": {
+						"$ref": "#/definitions/BhxhBankAccount"
+					},
+					"type": "array",
+					"description": "Array of beneficiary bank accounts"
+				},
+				"meta": {
+					"properties": {
+						"count": {
+							"type": "number",
+							"format": "double",
+							"description": "Number of bank accounts returned"
+						},
+						"agencyCode": {
+							"type": "string",
+							"description": "BHXH agency code"
+						}
+					},
+					"required": [
+						"count",
+						"agencyCode"
+					],
+					"type": "object",
+					"description": "Response metadata"
+				}
+			},
+			"required": [
+				"success",
+				"data"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"PaymentUnitInfo": {
+			"description": "Unit information for payment initialization (structure TBD)\nWill be updated based on actual API response from Code 503",
+			"properties": {},
+			"type": "object",
+			"additionalProperties": {
+				"additionalProperties": true
+			}
+		},
+		"PaymentUnitInfoResponse": {
+			"description": "Unit info response",
+			"properties": {
+				"success": {
+					"type": "boolean",
+					"description": "Success flag"
+				},
+				"data": {
+					"$ref": "#/definitions/PaymentUnitInfo",
+					"description": "Unit information data"
+				}
+			},
+			"required": [
+				"success",
+				"data"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"PaymentReferenceComponents": {
+			"description": "Payment reference string components",
+			"properties": {
+				"prefix": {
+					"type": "string",
+					"description": "Prefix (always \"+BHXH\")"
+				},
+				"transactionType": {
+					"type": "string",
+					"description": "Transaction type (e.g., \"103\" for payment)"
+				},
+				"reserved": {
+					"type": "string",
+					"description": "Reserved/version field (e.g., \"00\")"
+				},
+				"unitCode": {
+					"type": "string",
+					"description": "Unit code (e.g., \"TZH490L\")"
+				},
+				"agencyCode": {
+					"type": "string",
+					"description": "Agency code (e.g., \"07906\")"
+				},
+				"description": {
+					"type": "string",
+					"description": "Description (e.g., \"dong BHXH\")"
+				}
+			},
+			"required": [
+				"prefix",
+				"transactionType",
+				"reserved",
+				"unitCode",
+				"agencyCode",
+				"description"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"PaymentReferenceResponse": {
+			"description": "Payment reference response",
+			"properties": {
+				"success": {
+					"type": "boolean",
+					"description": "Success flag"
+				},
+				"data": {
+					"properties": {
+						"components": {
+							"$ref": "#/definitions/PaymentReferenceComponents",
+							"description": "Reference components"
+						},
+						"reference": {
+							"type": "string",
+							"description": "Full reference string"
+						}
+					},
+					"required": [
+						"components",
+						"reference"
+					],
+					"type": "object",
+					"description": "Reference data"
+				}
+			},
+			"required": [
+				"success",
+				"data"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
 		"PaperType": {
 			"description": "Paper Types (Code 071)\nDocument types: Sổ hộ khẩu, CCCD, etc.",
 			"properties": {
@@ -2198,6 +2898,315 @@
 						"schema": {
 							"$ref": "#/definitions/RefreshRequestBody"
 						}
+					}
+				]
+			}
+		},
+		"/api/v1/payments/c12-report": {
+			"get": {
+				"operationId": "GetC12Report",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/C12ReportResponse"
+						}
+					},
+					"400": {
+						"description": "Bad Request - Invalid month parameter",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"401": {
+						"description": "Unauthorized - Missing credentials",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"500": {
+						"description": "Failed to fetch C12 report",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"description": "Get C12 monthly payment obligation report\nReturns both raw hierarchical data and parsed structured sections",
+				"security": [],
+				"parameters": [
+					{
+						"description": "BHXH username for per-request authentication",
+						"in": "query",
+						"name": "username",
+						"required": false,
+						"type": "string"
+					},
+					{
+						"description": "BHXH password for per-request authentication",
+						"in": "query",
+						"name": "password",
+						"required": false,
+						"type": "string"
+					},
+					{
+						"description": "Month number (1-12, required)",
+						"in": "query",
+						"name": "thang",
+						"required": false,
+						"format": "double",
+						"type": "number"
+					},
+					{
+						"description": "Year (optional, defaults to current year)",
+						"in": "query",
+						"name": "nam",
+						"required": false,
+						"format": "double",
+						"type": "number"
+					}
+				]
+			}
+		},
+		"/api/v1/payments/history": {
+			"get": {
+				"operationId": "GetPaymentHistory",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/PaymentHistoryResponse"
+						}
+					},
+					"401": {
+						"description": "Unauthorized - Missing credentials",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"500": {
+						"description": "Failed to fetch payment history",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"description": "Get payment transaction history\nReturns electronic payment records with pagination",
+				"security": [],
+				"parameters": [
+					{
+						"description": "BHXH username for per-request authentication",
+						"in": "query",
+						"name": "username",
+						"required": false,
+						"type": "string"
+					},
+					{
+						"description": "BHXH password for per-request authentication",
+						"in": "query",
+						"name": "password",
+						"required": false,
+						"type": "string"
+					},
+					{
+						"description": "Page number (default: 1)",
+						"in": "query",
+						"name": "PageIndex",
+						"required": false,
+						"format": "double",
+						"type": "number"
+					},
+					{
+						"description": "Page size (default: 10)",
+						"in": "query",
+						"name": "PageSize",
+						"required": false,
+						"format": "double",
+						"type": "number"
+					},
+					{
+						"description": "Optional filter string",
+						"in": "query",
+						"name": "Filter",
+						"required": false,
+						"type": "string"
+					}
+				]
+			}
+		},
+		"/api/v1/payments/bank-accounts": {
+			"get": {
+				"operationId": "GetBankAccounts",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/BankAccountsResponse"
+						}
+					},
+					"401": {
+						"description": "Unauthorized - Missing credentials",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"500": {
+						"description": "Failed to fetch bank accounts",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"description": "Get BHXH beneficiary bank accounts\nReturns list of valid bank accounts for BHXH payments",
+				"security": [],
+				"parameters": [
+					{
+						"description": "BHXH username for per-request authentication",
+						"in": "query",
+						"name": "username",
+						"required": false,
+						"type": "string"
+					},
+					{
+						"description": "BHXH password for per-request authentication",
+						"in": "query",
+						"name": "password",
+						"required": false,
+						"type": "string"
+					}
+				]
+			}
+		},
+		"/api/v1/payments/unit-info": {
+			"get": {
+				"operationId": "GetPaymentUnitInfo",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/PaymentUnitInfoResponse"
+						}
+					},
+					"401": {
+						"description": "Unauthorized - Missing credentials",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"500": {
+						"description": "Failed to fetch unit info",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"description": "Get unit payment information for payment initialization",
+				"security": [],
+				"parameters": [
+					{
+						"description": "BHXH username for per-request authentication",
+						"in": "query",
+						"name": "username",
+						"required": false,
+						"type": "string"
+					},
+					{
+						"description": "BHXH password for per-request authentication",
+						"in": "query",
+						"name": "password",
+						"required": false,
+						"type": "string"
+					}
+				]
+			}
+		},
+		"/api/v1/payments/reference": {
+			"get": {
+				"operationId": "GetPaymentReference",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/PaymentReferenceResponse"
+						}
+					},
+					"400": {
+						"description": "Bad Request - Missing unit/agency codes",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"401": {
+						"description": "Unauthorized - Missing credentials",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"500": {
+						"description": "Failed to generate payment reference",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"description": "Generate payment reference string\nCreates standardized BHXH payment reference format",
+				"security": [],
+				"parameters": [
+					{
+						"description": "BHXH username for per-request authentication",
+						"in": "query",
+						"name": "username",
+						"required": false,
+						"type": "string"
+					},
+					{
+						"description": "BHXH password for per-request authentication",
+						"in": "query",
+						"name": "password",
+						"required": false,
+						"type": "string"
+					},
+					{
+						"description": "Transaction type (default: \"103\" for payment)",
+						"in": "query",
+						"name": "type",
+						"required": false,
+						"type": "string"
+					},
+					{
+						"description": "Payment description (default: \"dong BHXH\")",
+						"in": "query",
+						"name": "description",
+						"required": false,
+						"type": "string"
+					},
+					{
+						"description": "Unit code (optional, uses session default if not provided)",
+						"in": "query",
+						"name": "unitCode",
+						"required": false,
+						"type": "string"
+					},
+					{
+						"description": "Agency code (optional, uses session default if not provided)",
+						"in": "query",
+						"name": "agencyCode",
+						"required": false,
+						"type": "string"
 					}
 				]
 			}

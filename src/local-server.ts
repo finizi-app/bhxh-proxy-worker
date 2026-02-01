@@ -48,15 +48,26 @@ app.use(createApiKeyMiddleware());
 // Swagger UI setup
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(undefined, {
   swaggerOptions: {
-    url: "/swagger.json",
+    url: "/openapi.json",
     docExpansion: "list",
     filter: true,
   },
 }));
 
-// Serve swagger.json at root
+// Serve openapi.json
+app.get("/openapi.json", (_req: Request, res: Response) => {
+  res.sendFile("openapi.json", { root: "./src/generated" });
+});
+
+// Serve openapi.yaml (for Insomnia compatibility)
+app.get("/openapi.yaml", (_req: Request, res: Response) => {
+  res.setHeader("Content-Type", "application/yaml");
+  res.sendFile("openapi.yaml", { root: "./src/generated" });
+});
+
+// Backward compatibility: redirect swagger.json to openapi.json
 app.get("/swagger.json", (_req: Request, res: Response) => {
-  res.sendFile("swagger.json", { root: "./src/generated" });
+  res.redirect("/openapi.json");
 });
 
 // Health check at root (bypass profiling)
