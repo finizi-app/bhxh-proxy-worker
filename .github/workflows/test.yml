@@ -1,0 +1,78 @@
+name: Tests
+
+on:
+  push:
+    branches: [master, main, develop]
+  pull_request:
+    branches: [master, main, develop]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run integration tests
+        env:
+          BHXH_USERNAME: ${{ secrets.BHXH_TEST_USERNAME }}
+          BHXH_PASSWORD: ${{ secrets.BHXH_TEST_PASSWORD }}
+          BHXH_ENCRYPTION_KEY: ${{ secrets.BHXH_ENCRYPTION_KEY }}
+          AI_CAPTCHA_ENDPOINT: ${{ secrets.AI_CAPTCHA_ENDPOINT }}
+          AI_CAPTCHA_API_KEY: ${{ secrets.AI_CAPTCHA_API_KEY }}
+          API_KEY: ${{ secrets.API_KEY }}
+        run: npm run test:integration
+
+      - name: Generate coverage report
+        env:
+          BHXH_USERNAME: ${{ secrets.BHXH_TEST_USERNAME }}
+          BHXH_PASSWORD: ${{ secrets.BHXH_TEST_PASSWORD }}
+          BHXH_ENCRYPTION_KEY: ${{ secrets.BHXH_ENCRYPTION_KEY }}
+          AI_CAPTCHA_ENDPOINT: ${{ secrets.AI_CAPTCHA_ENDPOINT }}
+          AI_CAPTCHA_API_KEY: ${{ secrets.AI_CAPTCHA_API_KEY }}
+          API_KEY: ${{ secrets.API_KEY }}
+        run: npm run test:coverage
+
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: |
+            coverage/
+            coverage-final.json
+          retention-days: 30
+
+      - name: Check coverage thresholds
+        run: |
+          # Fail if overall coverage below 60% (adjusted for integration tests)
+          echo "Checking coverage thresholds..."
+
+          # Extract line coverage from coverage output
+          COVERAGE=$(npm run test:coverage 2>&1 | grep "All files" | awk '{print $4}' | sed 's/%//')
+
+          if [ -z "$COVERAGE" ]; then
+            echo "Warning: Could not extract coverage percentage"
+            exit 0
+          fi
+
+          echo "Current coverage: ${COVERAGE}%"
+
+          # Convert to integer for comparison
+          COVERAGE_INT=$(echo "$COVERAGE" | cut -d. -f1)
+
+          if [ "$COVERAGE_INT" -lt 60 ]; then
+            echo "❌ Coverage ${COVERAGE}% is below minimum 60%"
+            exit 1
+          fi
+
+          echo "✅ Coverage ${COVERAGE}% meets minimum 60% threshold"

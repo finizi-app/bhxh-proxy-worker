@@ -3,12 +3,23 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
     include: ["test/**/*.test.ts"],
-    environment: "node", // Use Node environment for unit tests
+    setupFiles: ["./test/setup.ts"],
+    environment: "node",
     globals: true,
-    testTimeout: 15000, // 15 second timeout for async tests
+    testTimeout: 30000, // 30 second timeout for real API calls
+    hookTimeout: 30000, // 30 second timeout for setup hooks
+    fileParallelism: false, // Run test files sequentially to avoid session cache conflicts
+    maxConcurrency: 1, // Run tests sequentially to avoid session cache conflicts
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
+      exclude: [
+        "node_modules/**",
+        "test/**",
+        "*.config.ts",
+        "scripts/**",
+        "src/generated/**",
+      ],
     },
   },
 });

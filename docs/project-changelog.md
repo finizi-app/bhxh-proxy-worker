@@ -34,6 +34,31 @@ All notable changes to this project will be documented in this file.
 - `tienLuong` field in D02-TS employee data is now `string` type (was `number`)
 - BHXH API Code 084 payload structure updated to match actual format
 
+#### Payment API
+- **Payment Module** (2026-02-01)
+  - `GET /api/v1/payments/c12-report` - Monthly payment obligation report (Code 137)
+  - `GET /api/v1/payments/history` - Payment transaction history (Code 514)
+  - `GET /api/v1/payments/bank-accounts` - Beneficiary bank accounts (Code 504)
+  - `GET /api/v1/payments/unit-info` - Unit payment information (Code 503)
+  - `GET /api/v1/payments/reference` - Generate payment reference string
+  - C12 report includes both raw hierarchical data and parsed structured sections
+  - Payment history supports pagination with empty response handling
+  - Payment reference uses session defaults for unit/agency codes
+
+#### Models
+- `src/models/payment/c12.model.ts` - C12 report types with section parsing
+- `src/models/payment/history.model.ts` - Payment history with pagination
+- `src/models/payment/bank.model.ts` - Bank account information
+- `src/models/payment/reference.model.ts` - Payment reference generation
+- `src/models/payment/unit-info.model.ts` - Unit payment information
+- `src/models/payment/index.ts` - Payment model exports
+
+#### Services
+- `src/services/payment.service.ts` - Payment API business logic
+
+#### Controllers
+- `src/controllers/payments.controller.ts` - Payment REST endpoints
+
 ### Authentication & Security
 - **Header-Based Authentication** (2026-01-31)
   - `X-Username` header - BHXH username for authentication (overrides query params)

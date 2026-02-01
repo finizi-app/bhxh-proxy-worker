@@ -11,7 +11,10 @@
     "start": "npx tsx src/local-server.ts",
     "docs:validate": "swagger-cli validate api-docs/openapi.yaml",
     "docs:generate": "node scripts/generate-api-docs.js",
-    "test": "vitest"
+    "test": "vitest",
+    "test:integration": "vitest test/integration",
+    "test:coverage": "vitest --coverage",
+    "test:watch": "vitest --watch"
   },
   "dependencies": {
     "axios": "^1.13.4",
@@ -31,8 +34,10 @@
     "@types/crypto-js": "^4.2.2",
     "@types/express": "^5.0.6",
     "@types/node": "^25.1.0",
+    "@types/supertest": "^6.0.3",
     "@types/swagger-ui-express": "^4.1.8",
     "@vitest/coverage-v8": "^4.0.18",
+    "supertest": "^7.2.2",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.7.0",

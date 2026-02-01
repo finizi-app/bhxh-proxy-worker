@@ -8,27 +8,32 @@ Provides authenticated access to employee data and lookup tables.
 
 ## Authentication
 
-### API Key Header
+### Required Headers
 
-All protected endpoints require an `X-API-Key` header:
+All protected endpoints require the following headers:
 
+| Header | Required | Description |
+|--------|----------|-------------|
+| `X-API-Key` | Yes | API key for proxy authentication (configure in `.dev.vars`) |
+| `X-Username` | No* | BHXH username for per-request authentication |
+| `X-Password` | No* | BHXH password for per-request authentication |
+
+\*Headers are optional if default credentials are configured in `.dev.vars`.
+
+**Example:**
 ```bash
-X-API-Key: your-api-key-here
-```
-
-### Per-Request BHXH Credentials
-
-Optional `username` and `password` query parameters for multi-tenant support:
-
-```bash
-# With specific credentials
-GET /api/v1/employees?username=user@example.com&password=pass123
+# With headers
+curl -X GET "http://localhost:4000/api/v1/employees" \
+  -H "X-API-Key: sk_test_abc123" \
+  -H "X-Username: your@email.com" \
+  -H "X-Password: yourpassword"
 
 # Without credentials (uses fallback from .dev.vars)
-GET /api/v1/employees
+curl -X GET "http://localhost:4000/api/v1/employees" \
+  -H "X-API-Key: sk_test_abc123"
 ```
 
-Sessions are cached per unique credentials combination.
+**Note:** Sessions are cached per unique credentials combination.
 
 ## Base URLs
 
@@ -82,7 +87,9 @@ Get paginated list of employees for the current unit.
 **Example Request:**
 ```bash
 curl -X GET "http://localhost:4000/api/v1/employees?PageSize=10" \
-  -H "X-API-Key: sk_test_abc123"
+  -H "X-API-Key: sk_test_abc123" \
+  -H "X-Username: your@email.com" \
+  -H "X-Password: yourpassword"
 ```
 
 **Response 200:**
@@ -142,7 +149,9 @@ Get employee by ID (Code 172 - uses list filter fallback).
 **Example Request:**
 ```bash
 curl -X GET "http://localhost:4000/api/v1/employees/EMP001" \
-  -H "X-API-Key: sk_test_abc123"
+  -H "X-API-Key: sk_test_abc123" \
+  -H "X-Username: your@email.com" \
+  -H "X-Password: yourpassword"
 ```
 
 **Response 200:**
@@ -187,6 +196,8 @@ Bulk upload employees from Excel file (Code 112).
 ```bash
 curl -X POST "http://localhost:4000/api/v1/employees/upload" \
   -H "X-API-Key: sk_test_abc123" \
+  -H "X-Username: your@email.com" \
+  -H "X-Password: yourpassword" \
   -F "file=@employees.xlsx"
 ```
 
@@ -230,6 +241,8 @@ Update employee (Code 068).
 ```bash
 curl -X PUT "http://localhost:4000/api/v1/employees/12959231" \
   -H "X-API-Key: sk_test_abc123" \
+  -H "X-Username: your@email.com" \
+  -H "X-Password: yourpassword" \
   -H "Content-Type: application/json" \
   -d '{
     "id": 12959231,
@@ -286,7 +299,9 @@ Sync employee with central BHXH system (Code 156).
 **Example Request:**
 ```bash
 curl -X GET "http://localhost:4000/api/v1/employees/123/sync?masoBhxh=7930514316&maCqbh=07906" \
-  -H "X-API-Key: sk_test_abc123"
+  -H "X-API-Key: sk_test_abc123" \
+  -H "X-Username: your@email.com" \
+  -H "X-Password: yourpassword"
 ```
 
 **Response 200:**
@@ -325,7 +340,9 @@ Get districts by province code (Code 063).
 **Example Request:**
 ```bash
 curl -X GET "http://localhost:4000/api/v1/geographic/districts?maTinh=79" \
-  -H "X-API-Key: sk_test_abc123"
+  -H "X-API-Key: sk_test_abc123" \
+  -H "X-Username: your@email.com" \
+  -H "X-Password: yourpassword"
 ```
 
 **Response 200:**
@@ -365,7 +382,9 @@ Get paginated list of departments (Code 079).
 **Example Request:**
 ```bash
 curl -X GET "http://localhost:4000/api/v1/departments?PageSize=10" \
-  -H "X-API-Key: sk_test_abc123"
+  -H "X-API-Key: sk_test_abc123" \
+  -H "X-Username: your@email.com" \
+  -H "X-Password: yourpassword"
 ```
 
 **Response 200:**
