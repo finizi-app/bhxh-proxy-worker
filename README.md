@@ -43,6 +43,43 @@ npm run deploy
 | `npm run test:integration` | Run integration tests only |
 | `npm run test:coverage` | Generate coverage report |
 
+## Deploy to Container Platforms
+
+Deploy BHXH API as a container to any platform using portable deployment scripts.
+
+### Quick Deploy
+
+```bash
+# Deploy to Cloud Run (Google Cloud)
+./deploy/cloud-run.sh
+
+# Deploy to Azure Container Apps
+./deploy/azure-aca.sh
+
+# Deploy to Railway
+./deploy/railway.sh
+
+# Deploy to VPS via Docker
+./deploy/vps.sh
+
+# Deploy to Render (manual - link repo in dashboard)
+```
+
+### First-Time Setup
+
+1. **Configure environment variables:**
+   ```bash
+   cp deploy/.env.template .env
+   # Edit .env with your credentials
+   ```
+
+2. **Run deployment script:**
+   ```bash
+   ./deploy/cloud-run.sh  # or any platform script
+   ```
+
+**See [Deployment Guide](docs/deployment-portable-guide.md)** for detailed platform setup, troubleshooting, and platform comparison.
+
 ## Testing
 
 ### Prerequisites
@@ -223,6 +260,7 @@ Add delay between requests or implement exponential backoff in `src/services/pro
 ## Documentation
 
 - [API Reference](docs/api-reference.md) - Complete API documentation
+- [Portable Deployment Guide](docs/deployment-portable-guide.md) - Deploy to any container platform
 - [Development Roadmap](docs/development-roadmap.md) - Project milestones
 - [Project Changelog](docs/project-changelog.md) - Version history
 - [Test Documentation](test/README.md) - Testing guide
