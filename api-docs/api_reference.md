@@ -93,3 +93,8 @@ Most metadata APIs just require the user context fields:
 | Endpoint   | Method | Purpose                                                                                                                                   |
 | ---------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | **/check** | `GET`  | **Session Heartbeat / Token Validation**. <br>Sends empty body check to keep session alive and validate token. Returns success if active. |
+
+## 5. Account Management
+
+*   **[Change Password](change_password_api_docs.md)** - Change organization password.
+*   **[Code 108](code-108.md)** - **Company Profile** (Unit Info)
