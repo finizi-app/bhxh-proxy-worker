@@ -1,38 +1,39 @@
-# Node
-node_modules/
-
-# Build artifacts
-dist/
-
-# Development files
-.wrangler/
-.dev.vars
-*.log
+node_modules
+npm-debug.log
+package-lock.json
+yarn-error.log
 
 # Git
-.git/
+.git
 .gitignore
+.github
 
 # IDE
-.vscode/
-.idea/
-
-# Claude skills and config (not needed for deployment)
-.claude/
-.agent/
+.vscode
+.idea
+*.swp
+*.swo
 
 # Documentation
 *.md
-!README.md
+plans/
+docs/
 
-# Test files
-*.test.ts
-*.test.js
-__tests__/
+# Build outputs
+dist/
+.wrangler/
 
-# TypeScript source (we'll compile on the fly or use server.js)
-src/*.ts
+# Environment files (security)
+.dev.vars
+.env
+.env.local
+.env.*.local
 
-# Other
+# Tests
+test/
+coverage/
+*.log
+
+# Misc
 .DS_Store
 Thumbs.db
