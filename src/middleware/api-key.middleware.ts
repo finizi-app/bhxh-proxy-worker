@@ -31,7 +31,7 @@ interface ApiKeyConfig {
 const DEFAULT_CONFIG: ApiKeyConfig = {
   keys: parseApiKeys(process.env.API_KEYS || ""),
   logUsage: true,
-  publicPaths: ["/", "/health", "/api/health", "/docs", "/swagger", "/swagger.json", "/openapi.json", "/openapi.yaml"],
+  publicPaths: ["/", "/health", "/api/health", "/docs", "/swagger", "/swagger.json", "/openapi.json", "/openapi.yaml", "/api/v1/geographic", "/api/v1/master-data/medical-facilities"],
 };
 
 /**

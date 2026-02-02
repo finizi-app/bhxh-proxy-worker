@@ -6,6 +6,30 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+#### Public Geographic Data APIs (2026-02-03)
+- `GET /api/v1/geographic/provinces` - Get all provinces (public, no auth required)
+- `GET /api/v1/geographic/wards` - Get wards by province/district (public, no auth required)
+- `GET /api/v1/geographic/medical-facilities` - Get medical facilities by province (Cơ Sở Khám Chữa Bệnh - Code 063, public)
+- Uses internal session (environment credentials) for BHXH authentication
+- Direct API endpoints: `/api/getDmtinhthanh`, `/api/getDmphuongxa`, `/GetValues` (Code 063)
+- Added `/api/v1/geographic` to public paths in API key middleware
+
+#### Models
+- Added `MedicalFacility` interface to `src/models/geographic.model.ts` for healthcare facilities
+- Fields: `ma`, `ten`, `matinh`, `mahuyen`, `maphuongxa`
+
+#### Changed
+- Code 063 (`/GetValues`) returns **Cơ Sở Khám Chữa Bệnh** (Medical Facilities), not districts
+- Renamed service function from `getDistricts` to `getMedicalFacilities`
+- `/api/v1/geographic/districts` endpoint deprecated - kept for backward compatibility, returns medical facilities
+- Updated service to use `/GetValues` endpoint directly instead of `/CallApiWithCurrentUser`
+
+#### Employee Participation History Type (2026-02-03)
+- Added `ParticipationHistory` interface to `src/models/employee.model.ts`
+- Updated `EmployeeOfficialData.quyTrinhThamGia` from `unknown` to `ParticipationHistory[]`
+- Fields: `tuNgay`, `denNgay`, `maDonVi`, `tenDonVi`, `maTinh`, `loaiDoiTuong`
+- Proper typing for Code 156 (employee sync) response data
+
 #### Code 600 Declaration API (Codes 084, 117)
 - **Code 600 Declaration Endpoints** (2026-01-31)
   - `POST /api/v1/employees/details` - Fetch full employee details by IDs (Code 117)
@@ -86,7 +110,8 @@ All notable changes to this project will be documented in this file.
 
 #### Geographic Data
 - **Geographic Data Endpoints** (Code 063)
-  - `GET /api/v1/geographic/districts` - Get districts by province code
+  - `GET /api/v1/geographic/districts` - DEPRECATED: Actually returns medical facilities (Cơ Sở Khám Chữa Bệnh)
+  - Note: Code 063 returns healthcare facilities, not geographic districts
 
 #### Master Data
 - **Named Master Data Endpoints** (replaces generic `/lookup/{code}`)
@@ -160,7 +185,7 @@ Major feature release adding Department CRUD, Employee management extensions, an
 - `POST /api/v1/employees/upload` - Bulk upload from Excel (Code 112)
 
 #### Geographic Data
-- `GET /api/v1/geographic/districts` - Get districts by province (Code 063)
+- `GET /api/v1/geographic/districts` - Medical facilities by province (Code 063, incorrectly named as districts)
 
 #### Master Data (replaces generic lookup)
 - `GET /api/v1/master-data/paper-types` (Code 071)

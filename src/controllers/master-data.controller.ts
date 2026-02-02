@@ -5,9 +5,12 @@
  * Replaces generic /api/v1/lookup/{code} with discoverable endpoints.
  *
  * **Authentication:**
- * - `X-API-Key`: Required for all endpoints
+ * - `X-API-Key`: Required for protected endpoints
  * - `X-Username`: BHXH username (optional if default credentials configured)
  * - `X-Password`: BHXH password (optional if default credentials configured)
+ *
+ * **Public Access:**
+ * - `/api/v1/master-data/medical-facilities` - Public, no auth required (Code 063)
  *
  * Headers take priority over query parameters for backward compatibility.
  */
@@ -31,6 +34,8 @@ import {
 } from "../models/master-data.model";
 import { getValidSession } from "../services/session.service";
 import { lookup } from "../services/bhxh.service";
+import { getMedicalFacilities } from "../services/geographic.service";
+import { GeographicListResponse, MedicalFacility } from "../models";
 
 /**
  * Master data controller for fetching reference/metadata
@@ -162,6 +167,33 @@ export class MasterDataController extends Controller {
       console.error("Benefits fetch error:", message);
       throw {
         error: "Failed to fetch benefits",
+        message,
+      };
+    }
+  }
+
+  /**
+   * Get medical facilities (Cơ Sở Khám Chữa Bệnh - Code 063)
+   * Public endpoint - no authentication required
+   * Healthcare facilities for BHXH registration: hospitals, clinics, medical stations
+   * @param maTinh Province code (2-digit, e.g., "79" for HCMC). If omitted, returns all facilities.
+   * @returns List of medical facilities
+   */
+  @Get("/medical-facilities")
+  @SuccessResponse(200, "OK")
+  @Response<{ error: string; message: string }>(500, "Failed to fetch medical facilities")
+  public async getMedicalFacilities(
+    @Query("maTinh") maTinh?: string
+  ): Promise<GeographicListResponse<MedicalFacility>> {
+    try {
+      const session = await getValidSession();
+      const data = await getMedicalFacilities(maTinh, session);
+      return { success: true, data };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unknown error";
+      console.error("Medical facilities fetch error:", message);
+      throw {
+        error: "Failed to fetch medical facilities",
         message,
       };
     }

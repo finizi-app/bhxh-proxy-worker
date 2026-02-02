@@ -47,6 +47,7 @@ export type {
   EmployeeSyncResponse,
   EmployeeOfficialData,
   EmployeeDetailRequest,
+  ParticipationHistory,
 } from "./employee.model";
 
 // Proxy types
@@ -67,7 +68,14 @@ export type {
   District,
   Province,
   Ward,
+  MedicalFacility,
   DistrictListQueryParams,
+  MedicalFacilitiesListQueryParams,
+  ProvincesListQueryParams,
+  WardsListQueryParams,
+  DmtinhthanhRequest,
+  DmphuongxaRequest,
+  GetValues063Request,
   GeographicListResponse,
 } from "./geographic.model";
 

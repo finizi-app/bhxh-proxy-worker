@@ -153,34 +153,35 @@ export class EmployeesController extends Controller {
   }
 
   /**
-   * Get full employee details by IDs (Code 117)
+   * Get full employee details by ID (Code 117)
    * Fetches comprehensive employee data including contracts, salary, family, history
    * @param req Express request with auth headers
-   * @param requestBody Employee IDs and optional credentials
+   * @param employeeId Employee ID (internal record ID)
    * @returns Full employee details with contracts, salary, family members, history
    */
-  @Post("details")
+  @Get("{employeeId}/details")
   @SuccessResponse(200, "OK")
-  @Response<{ error: string; message: string }>(400, "Invalid request")
+  @Response<{ error: string; message: string }>(404, "Employee not found")
   @Response<{ error: string; message: string }>(500, "Failed to fetch employee details")
   public async getFullEmployeeDetails(
     @Request() req: any,
-    @Body() requestBody: { listNldid: number[] }
+    @Path() employeeId: string
   ): Promise<FullEmployeeDetailsResponse> {
     const t0 = Date.now();
 
     try {
       const session = await getValidSession(req?.request);
+      const id = parseInt(employeeId, 10);
 
-      if (!requestBody.listNldid || requestBody.listNldid.length === 0) {
+      if (isNaN(id)) {
         return {
           success: false,
-          message: "listNldid is required and must not be empty",
+          message: "Invalid employee ID",
         };
       }
 
-      console.log(`Fetching details for ${requestBody.listNldid.length} employees`);
-      const result = await fetchFullEmployeeDetails(session, requestBody.listNldid);
+      console.log(`Fetching full details for employee ID: ${id}`);
+      const result = await fetchFullEmployeeDetails(session, [id]);
 
       const totalMs = Date.now() - t0;
       console.log(`[TIMING] Code 117 fetch: ${totalMs}ms`);

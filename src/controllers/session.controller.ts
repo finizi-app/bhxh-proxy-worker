@@ -22,10 +22,12 @@ import {
 import {
   SessionStatusResponse,
   SessionRefreshResponse,
+  CompanyProfileResponse,
 } from "../models/session.model";
 import {
   getSessionStatus,
   refreshSession,
+  getValidSession,
 } from "../services/session.service";
 
 interface RefreshRequestBody {
@@ -75,6 +77,42 @@ export class SessionController extends Controller {
       console.error("Session refresh error:", message);
       throw {
         error: "Refresh failed",
+        message,
+      };
+    }
+  }
+
+  /**
+   * Get company profile from session
+   * Returns full company information from BHXH login (dsDonVi)
+   * @param req Express request with auth headers
+   * @returns Company profile with contact info
+   */
+  @Get("/company")
+  @SuccessResponse(200, "OK")
+  @Response<{ error: string; message: string }>(401, "Unauthorized")
+  @Response<{ error: string; message: string }>(500, "Failed to fetch company profile")
+  public async getCompanyProfile(
+    @Request() req: any
+  ): Promise<CompanyProfileResponse> {
+    try {
+      const session = await getValidSession(req?.request);
+      const now = Date.now();
+      const isActive = session.expiresAt > now;
+
+      return {
+        success: true,
+        data: session.currentDonVi,
+        meta: {
+          expiresIn: Math.max(0, Math.floor((session.expiresAt - now) / 1000)),
+          status: isActive ? "active" : "expired",
+        },
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unknown error";
+      console.error("Company profile fetch error:", message);
+      throw {
+        error: "Failed to fetch company profile",
         message,
       };
     }

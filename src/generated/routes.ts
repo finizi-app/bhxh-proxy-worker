@@ -57,6 +57,36 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DonVi": {
+        "dataType": "refObject",
+        "properties": {
+            "Id": {"dataType":"double"},
+            "Ma": {"dataType":"string"},
+            "Ten": {"dataType":"string"},
+            "TenDonVi": {"dataType":"string"},
+            "MaCoquan": {"dataType":"string"},
+            "MaCQ": {"dataType":"string"},
+            "TenCQ": {"dataType":"string"},
+            "MaSoBHXH": {"dataType":"string"},
+            "LoaiDoiTuong": {"dataType":"string"},
+            "Diachi": {"dataType":"string"},
+            "Sodienthoai": {"dataType":"string"},
+            "Mst": {"dataType":"string"},
+            "Email": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CompanyProfileResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "data": {"ref":"DonVi","required":true},
+            "meta": {"dataType":"nestedObjectLiteral","nestedProperties":{"status":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["expired"]}],"required":true},"expiresIn":{"dataType":"double","required":true}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "C12LineItem": {
         "dataType": "refObject",
         "properties": {
@@ -65,11 +95,11 @@ const models: TsoaRoute.Models = {
             "diaChi": {"dataType":"string","required":true},
             "stt": {"dataType":"string","required":true},
             "noiDung": {"dataType":"string","required":true},
-            "bhxh": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"double"}],"required":true},
-            "bhyt": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"double"}],"required":true},
-            "bhtn": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"double"}],"required":true},
-            "bhtnld": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"double"}],"required":true},
-            "cong": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"double"}],"required":true},
+            "bhxh": {"dataType":"string","required":true},
+            "bhyt": {"dataType":"string","required":true},
+            "bhtn": {"dataType":"string","required":true},
+            "bhtnld": {"dataType":"string","required":true},
+            "cong": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -175,11 +205,11 @@ const models: TsoaRoute.Models = {
         "properties": {
             "agencyCode": {"dataType":"string","required":true},
             "agencyName": {"dataType":"string","required":true},
-            "sectionA": {"dataType":"union","subSchemas":[{"ref":"C12SectionA"},{"dataType":"enum","enums":[null]}],"required":true},
-            "sectionB": {"dataType":"union","subSchemas":[{"ref":"C12SectionB"},{"dataType":"enum","enums":[null]}],"required":true},
-            "sectionC": {"dataType":"union","subSchemas":[{"ref":"C12SectionC"},{"dataType":"enum","enums":[null]}],"required":true},
-            "sectionD": {"dataType":"union","subSchemas":[{"ref":"C12SectionD"},{"dataType":"enum","enums":[null]}],"required":true},
-            "sectionDau": {"dataType":"union","subSchemas":[{"ref":"C12SectionDau"},{"dataType":"enum","enums":[null]}],"required":true},
+            "sectionA": {"ref":"C12SectionA","required":true},
+            "sectionB": {"ref":"C12SectionB","required":true},
+            "sectionC": {"ref":"C12SectionC","required":true},
+            "sectionD": {"ref":"C12SectionD","required":true},
+            "sectionDau": {"ref":"C12SectionDau","required":true},
         },
         "additionalProperties": false,
     },
@@ -208,7 +238,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "soUnc": {"dataType":"string"},
             "ngayNop": {"dataType":"string"},
-            "soTien": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"double"}]},
+            "soTien": {"dataType":"string"},
         },
         "additionalProperties": {"dataType":"any"},
     },
@@ -264,7 +294,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "prefix": {"dataType":"string","required":true},
-            "type": {"dataType":"string","required":true},
+            "transactionType": {"dataType":"string","required":true},
             "reserved": {"dataType":"string","required":true},
             "unitCode": {"dataType":"string","required":true},
             "agencyCode": {"dataType":"string","required":true},
@@ -377,6 +407,27 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MedicalFacility": {
+        "dataType": "refObject",
+        "properties": {
+            "ma": {"dataType":"string"},
+            "ten": {"dataType":"string"},
+            "matinh": {"dataType":"string"},
+            "mahuyen": {"dataType":"string"},
+            "maphuongxa": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GeographicListResponse_MedicalFacility_": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "data": {"dataType":"array","array":{"dataType":"refObject","ref":"MedicalFacility"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Relationship": {
         "dataType": "refObject",
         "properties": {
@@ -415,21 +466,38 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "District": {
+    "Province": {
         "dataType": "refObject",
         "properties": {
             "ma": {"dataType":"string","required":true},
             "ten": {"dataType":"string","required":true},
-            "cap": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "GeographicListResponse_District_": {
+    "GeographicListResponse_Province_": {
         "dataType": "refObject",
         "properties": {
             "success": {"dataType":"boolean","required":true},
-            "data": {"dataType":"array","array":{"dataType":"refObject","ref":"District"},"required":true},
+            "data": {"dataType":"array","array":{"dataType":"refObject","ref":"Province"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Ward": {
+        "dataType": "refObject",
+        "properties": {
+            "ma": {"dataType":"string","required":true},
+            "ten": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GeographicListResponse_Ward_": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "data": {"dataType":"array","array":{"dataType":"refObject","ref":"Ward"},"required":true},
         },
         "additionalProperties": false,
     },
@@ -645,12 +713,25 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ParticipationHistory": {
+        "dataType": "refObject",
+        "properties": {
+            "tuNgay": {"dataType":"string"},
+            "denNgay": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "maDonVi": {"dataType":"string"},
+            "tenDonVi": {"dataType":"string"},
+            "maTinh": {"dataType":"string"},
+            "loaiDoiTuong": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "EmployeeOfficialData": {
         "dataType": "refObject",
         "properties": {
             "masoBhxh": {"dataType":"string"},
             "trangThaiBaoHiem": {"dataType":"string"},
-            "quyTrinhThamGia": {"dataType":"any"},
+            "quyTrinhThamGia": {"dataType":"array","array":{"dataType":"refObject","ref":"ParticipationHistory"}},
             "hoten": {"dataType":"string"},
         },
         "additionalProperties": {"dataType":"any"},
@@ -1037,6 +1118,36 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsSessionController_getCompanyProfile: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+        };
+        app.get('/api/v1/session/company',
+            ...(fetchMiddlewares<RequestHandler>(SessionController)),
+            ...(fetchMiddlewares<RequestHandler>(SessionController.prototype.getCompanyProfile)),
+
+            async function SessionController_getCompanyProfile(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsSessionController_getCompanyProfile, request, response });
+
+                const controller = new SessionController();
+
+              await templateService.apiHandler({
+                methodName: 'getCompanyProfile',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsPaymentsController_getC12Report: Record<string, TsoaRoute.ParameterSchema> = {
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 username: {"in":"query","name":"username","dataType":"string"},
@@ -1356,6 +1467,36 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMasterDataController_getMedicalFacilities: Record<string, TsoaRoute.ParameterSchema> = {
+                maTinh: {"in":"query","name":"maTinh","dataType":"string"},
+        };
+        app.get('/api/v1/master-data/medical-facilities',
+            ...(fetchMiddlewares<RequestHandler>(MasterDataController)),
+            ...(fetchMiddlewares<RequestHandler>(MasterDataController.prototype.getMedicalFacilities)),
+
+            async function MasterDataController_getMedicalFacilities(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMasterDataController_getMedicalFacilities, request, response });
+
+                const controller = new MasterDataController();
+
+              await templateService.apiHandler({
+                methodName: 'getMedicalFacilities',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsMasterDataController_getRelationships: Record<string, TsoaRoute.ParameterSchema> = {
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
@@ -1415,9 +1556,69 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsGeographicController_getProvinces: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/api/v1/geographic/provinces',
+            ...(fetchMiddlewares<RequestHandler>(GeographicController)),
+            ...(fetchMiddlewares<RequestHandler>(GeographicController.prototype.getProvinces)),
+
+            async function GeographicController_getProvinces(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsGeographicController_getProvinces, request, response });
+
+                const controller = new GeographicController();
+
+              await templateService.apiHandler({
+                methodName: 'getProvinces',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsGeographicController_getWards: Record<string, TsoaRoute.ParameterSchema> = {
+                matinh: {"in":"query","name":"matinh","dataType":"string"},
+                mahuyen: {"in":"query","name":"mahuyen","dataType":"string"},
+        };
+        app.get('/api/v1/geographic/wards',
+            ...(fetchMiddlewares<RequestHandler>(GeographicController)),
+            ...(fetchMiddlewares<RequestHandler>(GeographicController.prototype.getWards)),
+
+            async function GeographicController_getWards(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsGeographicController_getWards, request, response });
+
+                const controller = new GeographicController();
+
+              await templateService.apiHandler({
+                methodName: 'getWards',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsGeographicController_getDistricts: Record<string, TsoaRoute.ParameterSchema> = {
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
-                maTinh: {"in":"query","name":"maTinh","required":true,"dataType":"string"},
+                maTinh: {"in":"query","name":"maTinh","dataType":"string"},
         };
         app.get('/api/v1/geographic/districts',
             ...(fetchMiddlewares<RequestHandler>(GeographicController)),
@@ -1516,9 +1717,9 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsEmployeesController_getFullEmployeeDetails: Record<string, TsoaRoute.ParameterSchema> = {
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
-                requestBody: {"in":"body","name":"requestBody","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"listNldid":{"dataType":"array","array":{"dataType":"double"},"required":true}}},
+                employeeId: {"in":"path","name":"employeeId","required":true,"dataType":"string"},
         };
-        app.post('/api/v1/employees/details',
+        app.get('/api/v1/employees/:employeeId/details',
             ...(fetchMiddlewares<RequestHandler>(EmployeesController)),
             ...(fetchMiddlewares<RequestHandler>(EmployeesController.prototype.getFullEmployeeDetails)),
 

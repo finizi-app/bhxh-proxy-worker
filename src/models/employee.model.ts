@@ -322,6 +322,25 @@ export interface EmployeeSyncRequest {
 }
 
 /**
+ * Employee BHXH participation history entry (Code 156 - quyTrinhThamGia)
+ * Represents a single employment period with BHXH contributions
+ */
+export interface ParticipationHistory {
+  /** Start date (YYYY-MM-DD) */
+  tuNgay?: string;
+  /** End date (null if current/active) */
+  denNgay?: string | null;
+  /** Employer/Unit code */
+  maDonVi?: string;
+  /** Employer/Unit name */
+  tenDonVi?: string;
+  /** Province code */
+  maTinh?: string;
+  /** Object type (1=regular employee) */
+  loaiDoiTuong?: string;
+}
+
+/**
  * Employee sync response (Code 156)
  * Official employee data from central BHXH system
  */
@@ -339,8 +358,8 @@ export interface EmployeeOfficialData {
   masoBhxh?: string;
   /** Insurance status */
   trangThaiBaoHiem?: string;
-  /** Participation process data */
-  quyTrinhThamGia?: unknown;
+  /** Participation process data (employment history) */
+  quyTrinhThamGia?: ParticipationHistory[];
   /** Employee name */
   hoten?: string;
   /** Additional fields */

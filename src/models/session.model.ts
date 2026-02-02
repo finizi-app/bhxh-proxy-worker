@@ -2,6 +2,8 @@
  * Session model for BHXH authentication
  */
 export interface DonVi {
+  /** Internal ID */
+  Id?: number;
   /** Unit code */
   Ma?: string;
   /** Unit name */
@@ -10,10 +12,22 @@ export interface DonVi {
   TenDonVi?: string;
   /** Organization code */
   MaCoquan?: string;
+  /** Agency code (MaCQ) */
+  MaCQ?: string;
+  /** Agency name (TenCQ) */
+  TenCQ?: string;
   /** BHXH code */
   MaSoBHXH?: string;
   /** Object type */
   LoaiDoiTuong?: string;
+  /** Address */
+  Diachi?: string;
+  /** Phone number */
+  Sodienthoai?: string;
+  /** Tax code (MST) */
+  Mst?: string;
+  /** Email */
+  Email?: string;
 }
 
 /**
@@ -50,6 +64,18 @@ export interface SessionRefreshResponse {
   message: string;
   unit: string;
   expiresIn: number;
+}
+
+/**
+ * Company profile response
+ */
+export interface CompanyProfileResponse {
+  success: boolean;
+  data: DonVi;
+  meta: {
+    expiresIn: number;
+    status: "active" | "expired";
+  };
 }
 
 /**
