@@ -22,7 +22,7 @@ npm install --save-dev @types/crypto-js
 
 ## 2. Porting Logic
 
-You will need to port the logic from [fetch_employees.js](file:///Users/trunghuynh/development/b4b-api/dvc_bhxh_client/fetch_employees.js) to `src/index.ts`.
+You will need to port the logic from [fetch_employees.js] to `src/index.ts`.
 
 ### Key Differences for Workers:
 1.  **Networking**: Replace `axios` with native `fetch()`.
@@ -35,9 +35,9 @@ You will need to port the logic from [fetch_employees.js](file:///Users/trunghuy
 
 | File | Purpose |
 |------|---------|
-| [api_reference.md](file:///Users/trunghuynh/.gemini/antigravity/brain/91df0988-2a86-44b3-8c21-83ea9f27a431/api_reference.md) | **The Bible**. Contains all the endpoints, payloads, and response structures you need to implement. |
-| [fetch_employees.js](file:///Users/trunghuynh/development/b4b-api/dvc_bhxh_client/fetch_employees.js) | **Reference Implementation**. Contains the working logic flow (Login -> Token -> Fetch). |
-| [headless_login_script.js](file:///Users/trunghuynh/development/b4b-api/dvc_bhxh_client/headless_login_script.js) | Contains the AES handshake details. |
+| [api_reference.md] | **The Bible**. Contains all the endpoints, payloads, and response structures you need to implement. |
+| [fetch_employees.js]| **Reference Implementation**. Contains the working logic flow (Login -> Token -> Fetch). |
+| [headless_login_script.js] | Contains the AES handshake details. |
 
 ## 4. Architecture (Recap)
 
