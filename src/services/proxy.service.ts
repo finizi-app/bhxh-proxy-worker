@@ -6,7 +6,10 @@ import { HttpsProxyAgent } from "https-proxy-agent";
 import dotenv from "dotenv";
 import { ProxyConfig } from "../models/proxy.model";
 
-dotenv.config({ path: ".dev.vars" });
+// Load environment variables
+// Production: use .env, Development: use .dev.vars
+const envFile = process.env.NODE_ENV === "production" ? ".env" : ".dev.vars";
+dotenv.config({ path: envFile });
 
 /** Configuration from environment */
 const CONFIG = {

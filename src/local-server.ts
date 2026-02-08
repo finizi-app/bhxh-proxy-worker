@@ -8,7 +8,9 @@ import swaggerUi from "swagger-ui-express";
 import dotenv from "dotenv";
 
 // Load environment variables
-dotenv.config({ path: ".dev.vars" });
+// Production: use .env, Development: use .dev.vars
+const envFile = process.env.NODE_ENV === "production" ? ".env" : ".dev.vars";
+dotenv.config({ path: envFile });
 
 // Import routes - this registers all tsoa routes
 import { RegisterRoutes } from "./generated/routes";
