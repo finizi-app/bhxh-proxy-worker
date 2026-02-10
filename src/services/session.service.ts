@@ -84,12 +84,16 @@ function createCacheKey(username?: string, password?: string): string {
 }
 
 /**
- * Get current session status without triggering refresh
- * @param username - Optional BHXH username
- * @param password - Optional BHXH password
+ * Get current session status without triggering refresh.
+ * Uses BHXH credentials from request headers (preferred) or passed params.
+ *
+ * @param req - Express Request object (optional, for header-based auth)
+ * @param username - Optional BHXH username for per-request auth (legacy)
+ * @param password - Optional BHXH password for per-request auth (legacy)
  * @returns Session status object
  */
 export async function getSessionStatus(
+  req?: Request,
   username?: string,
   password?: string
 ): Promise<{
@@ -97,7 +101,19 @@ export async function getSessionStatus(
   expiresIn: number;
   unit?: string;
 }> {
-  const cacheKey = createCacheKey(username, password);
+  let extractedUsername: string | undefined;
+  let extractedPassword: string | undefined;
+
+  if (req) {
+    const authReq = req as AuthenticatedRequest;
+    extractedUsername = authReq.bhxhUsername;
+    extractedPassword = authReq.bhxhPassword;
+  }
+
+  const finalUsername = extractedUsername || username;
+  const finalPassword = extractedPassword || password;
+
+  const cacheKey = createCacheKey(finalUsername, finalPassword);
   const cached = sessionCache.get(cacheKey);
 
   if (cached && cached.expiresAt > Date.now()) {
@@ -258,18 +274,34 @@ export async function performLogin(
 }
 
 /**
- * Refresh session by clearing cache and performing new login
- * @param username - Optional BHXH username
- * @param password - Optional BHXH password
+ * Refresh session by clearing cache and performing new login.
+ * Uses BHXH credentials from request headers (preferred) or passed params.
+ *
+ * @param req - Express Request object (optional, for header-based auth)
+ * @param username - Optional BHXH username for per-request auth (legacy)
+ * @param password - Optional BHXH password for per-request auth (legacy)
  * @returns Fresh Session object
  */
 export async function refreshSession(
+  req?: Request,
   username?: string,
   password?: string
 ): Promise<Session> {
-  const cacheKey = createCacheKey(username, password);
+  let extractedUsername: string | undefined;
+  let extractedPassword: string | undefined;
+
+  if (req) {
+    const authReq = req as AuthenticatedRequest;
+    extractedUsername = authReq.bhxhUsername;
+    extractedPassword = authReq.bhxhPassword;
+  }
+
+  const finalUsername = extractedUsername || username;
+  const finalPassword = extractedPassword || password;
+
+  const cacheKey = createCacheKey(finalUsername, finalPassword);
   sessionCache.delete(cacheKey);
-  return performLogin(username, password);
+  return performLogin(finalUsername, finalPassword);
 }
 
 export default {

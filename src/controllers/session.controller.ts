@@ -65,7 +65,7 @@ export class SessionController extends Controller {
     @Body() body?: RefreshRequestBody
   ): Promise<SessionRefreshResponse> {
     try {
-      const session = await refreshSession(req);
+      const session = await refreshSession(req, body?.username, body?.password);
       return {
         success: true,
         message: "Session refreshed",
