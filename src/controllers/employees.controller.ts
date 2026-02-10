@@ -74,7 +74,7 @@ export class EmployeesController extends Controller {
     const t0 = Date.now();
 
     try {
-      const session = await getValidSession(req?.request);
+      const session = await getValidSession(req);
       const params: EmployeesQueryParams = {
         maNguoiLaoDong,
         ten,
@@ -125,7 +125,7 @@ export class EmployeesController extends Controller {
     @Path() employeeId: string
   ): Promise<EmployeeDetailResponse> {
     try {
-      const session = await getValidSession(req?.request);
+      const session = await getValidSession(req);
       const id = parseInt(employeeId, 10);
 
       // Use Code 172 API directly
@@ -170,7 +170,7 @@ export class EmployeesController extends Controller {
     const t0 = Date.now();
 
     try {
-      const session = await getValidSession(req?.request);
+      const session = await getValidSession(req);
       const id = parseInt(employeeId, 10);
 
       if (isNaN(id)) {
@@ -210,7 +210,7 @@ export class EmployeesController extends Controller {
     @Request() request: ExpressRequest
   ): Promise<EmployeeBulkUploadResponse> {
     try {
-      const session = await getValidSession((request as any).request);
+      const session = await getValidSession((request as any));
 
       // Check if file exists in request
       const files = request.files as Record<string, Express.Multer.File[]> | undefined;
@@ -291,7 +291,7 @@ export class EmployeesController extends Controller {
     @Body() request: EmployeeUpdateRequest
   ): Promise<EmployeeUpdateResponse> {
     try {
-      const session = await getValidSession(req?.request);
+      const session = await getValidSession(req);
 
       // Ensure ID matches path parameter
       const employeeData = { ...request, id: parseInt(employeeId, 10) || request.id };
@@ -333,7 +333,7 @@ export class EmployeesController extends Controller {
     @Query("maCqbh") maCqbh: string
   ): Promise<EmployeeSyncResponse> {
     try {
-      const session = await getValidSession(req?.request);
+      const session = await getValidSession(req);
 
       const result = await syncEmployee(
         {

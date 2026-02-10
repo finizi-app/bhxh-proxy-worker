@@ -48,7 +48,7 @@ export class SessionController extends Controller {
   public async getSessionStatus(
     @Request() req: any
   ): Promise<SessionStatusResponse> {
-    return await getSessionStatus(req?.request);
+    return await getSessionStatus(req);
   }
 
   /**
@@ -65,7 +65,7 @@ export class SessionController extends Controller {
     @Body() body?: RefreshRequestBody
   ): Promise<SessionRefreshResponse> {
     try {
-      const session = await refreshSession(req?.request);
+      const session = await refreshSession(req);
       return {
         success: true,
         message: "Session refreshed",
@@ -96,7 +96,7 @@ export class SessionController extends Controller {
     @Request() req: any
   ): Promise<CompanyProfileResponse> {
     try {
-      const session = await getValidSession(req?.request);
+      const session = await getValidSession(req);
       const now = Date.now();
       const isActive = session.expiresAt > now;
 

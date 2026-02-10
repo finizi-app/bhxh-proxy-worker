@@ -55,7 +55,7 @@ export class MasterDataController extends Controller {
     @Request() req: any
   ): Promise<MasterDataResponse<PaperType>> {
     try {
-      const session = await getValidSession(req?.request);
+      const session = await getValidSession(req);
       const data = (await lookup(session, "071")) as PaperType[];
       return { success: true, data };
     } catch (error) {
@@ -81,7 +81,7 @@ export class MasterDataController extends Controller {
     @Request() req: any
   ): Promise<MasterDataResponse<Country>> {
     try {
-      const session = await getValidSession(req?.request);
+      const session = await getValidSession(req);
       const data = (await lookup(session, "072")) as Country[];
       return { success: true, data };
     } catch (error) {
@@ -107,7 +107,7 @@ export class MasterDataController extends Controller {
     @Request() req: any
   ): Promise<MasterDataResponse<Ethnicity>> {
     try {
-      const session = await getValidSession(req?.request);
+      const session = await getValidSession(req);
       const data = (await lookup(session, "073")) as Ethnicity[];
       return { success: true, data };
     } catch (error) {
@@ -133,7 +133,7 @@ export class MasterDataController extends Controller {
     @Request() req: any
   ): Promise<MasterDataResponse<LaborPlanType>> {
     try {
-      const session = await getValidSession(req?.request);
+      const session = await getValidSession(req);
       const data = (await lookup(session, "086")) as LaborPlanType[];
       return { success: true, data };
     } catch (error) {
@@ -159,7 +159,7 @@ export class MasterDataController extends Controller {
     @Request() req: any
   ): Promise<MasterDataResponse<Benefit>> {
     try {
-      const session = await getValidSession(req?.request);
+      const session = await getValidSession(req);
       const data = (await lookup(session, "098")) as Benefit[];
       return { success: true, data };
     } catch (error) {
@@ -212,7 +212,7 @@ export class MasterDataController extends Controller {
     @Request() req: any
   ): Promise<MasterDataResponse<Relationship>> {
     try {
-      const session = await getValidSession(req?.request);
+      const session = await getValidSession(req);
       const data = (await lookup(session, "099")) as Relationship[];
       return { success: true, data };
     } catch (error) {

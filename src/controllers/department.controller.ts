@@ -71,7 +71,7 @@ export class DepartmentController extends Controller {
     @Body() request: DepartmentCreateRequest
   ): Promise<ApiResponse<Department>> {
     try {
-      const session: Session = await getValidSession(req?.request);
+      const session: Session = await getValidSession(req);
       const data = await createDept(request, session);
       this.setStatus(201);
       return { success: true, data };
@@ -105,7 +105,7 @@ export class DepartmentController extends Controller {
     @Query("PageSize") PageSize?: number
   ): Promise<PaginatedResponse<Department>> {
     try {
-      const session: Session = await getValidSession(request?.request);
+      const session: Session = await getValidSession(request);
       const query: DepartmentListQueryParams = {
         ma,
         ten,
@@ -144,7 +144,7 @@ export class DepartmentController extends Controller {
     @Path() id: number
   ): Promise<ApiResponse<Department | null>> {
     try {
-      const session: Session = await getValidSession(req?.request);
+      const session: Session = await getValidSession(req);
       const { data } = await listDepts({}, session);
       const dept = data.find((d) => d.id === id);
 
@@ -186,7 +186,7 @@ export class DepartmentController extends Controller {
     @Body() request: DepartmentUpdateRequest
   ): Promise<ApiResponse<Department>> {
     try {
-      const session: Session = await getValidSession(req?.request);
+      const session: Session = await getValidSession(req);
       const data = await updateDept(id, request, session);
       return { success: true, data };
     } catch (error) {
@@ -213,7 +213,7 @@ export class DepartmentController extends Controller {
     @Path() id: number
   ): Promise<{ success: boolean; message: string }> {
     try {
-      const session: Session = await getValidSession(req?.request);
+      const session: Session = await getValidSession(req);
       await deleteDept(id, session);
       return { success: true, message: "Department deleted successfully" };
     } catch (error) {

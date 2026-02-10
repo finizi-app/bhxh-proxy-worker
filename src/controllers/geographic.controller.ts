@@ -116,7 +116,7 @@ export class GeographicController extends Controller {
     @Query("maTinh") maTinh?: string
   ): Promise<GeographicListResponse<MedicalFacility>> {
     try {
-      const session = await getValidSession(req?.request);
+      const session = await getValidSession(req);
       const data = await getDistricts(maTinh, session);
       return { success: true, data };
     } catch (error) {

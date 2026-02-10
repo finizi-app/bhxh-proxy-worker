@@ -78,7 +78,7 @@ export class PaymentsController extends Controller {
       }
 
       // Get session
-      const session = await getValidSession(req?.request, username, password);
+      const session = await getValidSession(req, username, password);
 
       // Fetch C12 report
       const params: C12ReportQueryParams = { thang, nam };
@@ -135,7 +135,7 @@ export class PaymentsController extends Controller {
 
     try {
       // Get session
-      const session = await getValidSession(req?.request, username, password);
+      const session = await getValidSession(req, username, password);
 
       // Fetch payment history
       const params: PaymentHistoryQueryParams = {
@@ -193,7 +193,7 @@ export class PaymentsController extends Controller {
   ): Promise<BankAccountsResponse> {
     try {
       // Get session
-      const session = await getValidSession(req?.request, username, password);
+      const session = await getValidSession(req, username, password);
 
       // Fetch bank accounts
       const accounts = await PaymentService.fetchBankAccounts(session);
@@ -236,7 +236,7 @@ export class PaymentsController extends Controller {
   ): Promise<PaymentUnitInfoResponse> {
     try {
       // Get session
-      const session = await getValidSession(req?.request, username, password);
+      const session = await getValidSession(req, username, password);
 
       // Fetch unit info
       const unitInfo = await PaymentService.fetchPaymentUnitInfo(session);
@@ -285,7 +285,7 @@ export class PaymentsController extends Controller {
   ): Promise<PaymentReferenceResponse> {
     try {
       // Get session (for default unit/agency codes)
-      const session = await getValidSession(req?.request, username, password);
+      const session = await getValidSession(req, username, password);
 
       // Use session values if not provided
       const finalUnitCode = unitCode || session.currentDonVi.Ma || "";

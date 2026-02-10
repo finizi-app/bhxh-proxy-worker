@@ -58,7 +58,7 @@ export class DeclarationsController extends Controller {
 
     try {
       const session = await getValidSession(
-        req?.request,
+        req,
         submitRequest.username,
         submitRequest.password
       );
